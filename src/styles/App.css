@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+  }
+  
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  .banner {
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner1 {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .banner-text {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+  footer {
+    padding: 20px 0;
+  }

@@ -68,3 +68,70 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+### Tiêu đề riêng
+
+root/
+├── public/                # Tất cả các tệp tin public (index.html, favicon, images, etc.)
+├── src/                   # Thư mục chứa tất cả mã nguồn
+│   ├── assets/            # Tệp tin tài nguyên như hình ảnh, font, icons
+│   ├── components/        # Các component React
+│   ├── containers/        # Các container chứa logic và kết nối với API
+│   ├── pages/             # Các trang chính của ứng dụng
+│   ├── redux/             # Redux (actions, reducers, store)
+│   ├── styles/            # Các tệp tin CSS, SASS, LESS hoặc Bootstrap
+│   ├── utils/             # Các hàm hỗ trợ, API, lưu trữ
+│   ├── App.js             # Ứng dụng chính
+│   ├── index.js           # Entry point
+│   ├── router.js          # Router của ứng dụng
+│   └── setupTests.js      # Cấu hình cho các test
+├── .gitignore             # File để git ignore các tệp tin không cần lưu trữ
+├── README.md              # Hướng dẫn sử dụng
+└── package.json           # Các phụ thuộc và cài đặt của dự án
+
+### Trong thư viện
+
+root/
+├── public/
+│   ├── index.html                # Tệp tin chính của trang web
+│   ├── favicon.ico               # Icon của trang web
+│   ├── images/                   # Thư mục chứa các hình ảnh
+│   └── ...                       # Các tệp tin public khác
+├── src/
+│   ├── assets/
+│   │   ├── fonts/                # Font chữ
+│   │   ├── icons/                # Icons
+│   │   └── images/               # Hình ảnh
+│   ├── components/
+│   │   ├── Header.js             # Component header
+│   │   ├── Footer.js             # Component footer
+│   │   └── ...                   # Các component khác
+│   ├── containers/
+│   │   ├── HomeContainer.js      # Container của trang Home
+│   │   └── ...                   # Các container khác
+│   ├── pages/
+│   │   ├── HomePage.js           # Trang Home
+│   │   ├── AboutPage.js          # Trang About
+│   │   └── ...                   # Các trang khác
+│   ├── redux/
+│   │   ├── actions/              # Các action Redux
+│   │   ├── reducers/             # Các reducer Redux
+│   │   ├── store.js              # Store Redux
+│   │   └── ...                   # Các tệp tin liên quan khác
+│   ├── styles/
+│   │   ├── App.css               # CSS chính
+│   │   ├── Bootstrap.css         # Bootstrap CSS
+│   │   └── ...                   # Các tệp tin CSS khác
+│   ├── utils/
+│   │   ├── api.js                # Các hàm gọi API
+│   │   ├── helpers.js            # Các hàm hỗ trợ
+│   │   └── ...                   # Các tệp tin utils khác
+│   ├── App.js                    # Ứng dụng chính
+│   ├── index.js                  # Entry point
+│   ├── router.js                 # Router của ứng dụng
+│   └── setupTests.js             # Cấu hình cho các test
+├── .gitignore                    # File để git ignore các tệp tin không cần lưu trữ
+├── README.md                     # Hướng dẫn sử dụng
+└── package.json                  # Các phụ thuộc và cài đặt của dự án
