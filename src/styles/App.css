@@ -7,27 +7,20 @@ body {
   
   .header {
     margin-bottom: 20px;
+    background-color: aqua;
   }
   
   .banner {
-    height: 600px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: bisque;
   }
-  .banner1 {
+  .banner h1 {
     display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-word;
   }
-  .banner-text {
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-word;
-  }
-
+  
   footer {
-    padding: 20px 0;
+    padding: 10px 0;
   }
