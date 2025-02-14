@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../components/Header.js";
-import Footer from "../components/Footer.js";
-import Banner from "../components/Banner.js";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
+import Banner from "../components/Banner.jsx";
 import "../styles/App.css";
 
 function HomePage() {
