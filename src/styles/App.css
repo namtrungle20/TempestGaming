@@ -19,6 +19,22 @@ body {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
   
+  .danhmuc {
+    width: 307px;
+    height: 438px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding:  10px;
+  }
+  .nav-category {
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    transition: 0.3s;
+  }
+  .nav-category:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
   .banner {
     height: 100%;
     display: flex;
