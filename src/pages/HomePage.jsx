@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import Banner from "../components/Banner.jsx";
 import "../styles/App.css";
@@ -7,10 +6,7 @@ import DanhMuc from "../components/DanhMuc.jsx";
 
 function HomePage() {
   return (
-    <div className="App">
-      <header id="header">
-        <Header />
-      </header>
+    <div>
       <main style={{ display: 'flex' }}>
         <div style={{ flex: '1 1 200px' }}>
           <DanhMuc />

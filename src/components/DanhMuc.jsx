@@ -1,20 +1,21 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const categories = [
-    { name: "Console", path: "/" }
+    { name: "Console", path: "/console" }
 ];
 
-function DanhMuc() {
+const DanhMuc =()=> {
   return (
     <div className="danhmuc">
       <h3>Danh Mục</h3>
       <Navbar>
         <Nav className="nav-category">
           {categories.map((category, index) => (
-            <Nav.Link key={index} href={category.path}>
+            <Link key={index} to={category.path} className="nav-link">
               {category.name}
-            </Nav.Link>
+            </Link>
           ))}
         </Nav>
       </Navbar>

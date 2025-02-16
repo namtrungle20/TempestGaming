@@ -5,10 +5,11 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 
 import logo from "../assets/images/logo_tempest_gaming.png";
+import { Link } from "react-router-dom";
 
-function Header() {
+const Header=()=> {
   return (
-    <div className="header">
+    <div>
     <Navbar bg="light" expand="lg" className="navbar-shadow" style={{padding: '10px', paddingTop: '8px'}}>
       <Container>
       <Image src={logo} roundedCircle width={80} height={80} />
@@ -18,14 +19,11 @@ function Header() {
           <Navbar.Toggle aria-controls="basic-navbar-nav"/>
           <Navbar.Collapse id="basic-navbar-nav"/>
         <Nav className="me-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Features</Nav.Link>
-          <Nav.Link href="#pricing">Pricing</Nav.Link>
+          <Link to="/home" className="nav-link">Home</Link>
+          <Link to="/console" className="nav-link">Console</Link>
         </Nav>
       </Container>
     </Navbar>
-   
-  
     </div>
   );
 }
