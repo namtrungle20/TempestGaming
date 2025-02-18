@@ -1,15 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "../styles/App.css";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Nav,
-  Navbar,
-  Row,
-} from "react-bootstrap";
+import { Col, Container, Form, Nav, Navbar, Row } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 
 import logo from "../assets/images/logo_tempest_gaming.png";
@@ -43,12 +36,26 @@ const Header = () => {
             </Row>
           </Form>
           <Nav className="me-auto">
-            <Link to="/home" className="nav-link">
-              Home
-            </Link>
-            <Link to="/console" className="nav-link">
-              Console
-            </Link>
+            <Row>
+              <Col xs="auto">
+                <Link
+                  to="/login"
+                  className="nav-link"
+                  style={{fontSize: "23px"}}
+                >
+                  <i className="bi bi-person-fill"></i>
+                </Link>
+              </Col>
+              <Col xs="auto">
+                <Link
+                  to="/console"
+                  className="nav-link"
+                  style={{fontSize: "21px"}}
+                >
+                  <i className="bi bi-cart-fill"></i>
+                </Link>
+              </Col>
+            </Row>
           </Nav>
         </Container>
       </Navbar>

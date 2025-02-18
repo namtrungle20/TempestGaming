@@ -5,6 +5,8 @@ import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ConsolePage from "./pages/ConsolePage";
+import LoginPage from "./pages/LoginPage";
+import ResignPage from "./pages/ResignPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,6 +16,8 @@ root.render(
         <Route path="/" element={<App />}>
           <Route path="/console" element={<ConsolePage />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage/>} />
+          <Route path="/resign" element={<ResignPage />} />
           <Route index element={<HomePage />} />
         </Route>
       </Routes>

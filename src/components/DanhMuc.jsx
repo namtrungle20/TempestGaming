@@ -10,7 +10,7 @@ const DanhMuc =()=> {
   return (
     <div className="danhmuc">
       <h3>Danh Mục</h3>
-      <Navbar>
+      <Navbar style={{padding: "10px", paddingLeft: "20px"}}>
         <Nav className="nav-category">
           {categories.map((category, index) => (
             <Link key={index} to={category.path} className="nav-link">
