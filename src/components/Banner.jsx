@@ -36,25 +36,25 @@ const Banner = () => {
   ];
   return (
     <div className="banner">
-    <Container>
       <Container>
-      <CarouselCard/>
-      </Container>
-      <Container>
-        <Row className="justify-content-center">
-        <Col xs="auto">
-          <h1 className="text-center">Sản Phẩm thử nghiệm</h1>
-        </Col>
+        <Container>
+          <CarouselCard />
+        </Container>
+        <Container>
+          <Row className="justify-content-center">
+            <Col xs="auto">
+              <h1 className="text-center">Sản Phẩm thử nghiệm</h1>
+            </Col>
+          </Row>
+        </Container>
+        <Row xs={1} md={2} className="g-3">
+          {products.map((product, index) => (
+            <Col key={index} xs={3} sm={6} lg={3} className="product-column">
+              <ProductCard product={product} />
+            </Col>
+          ))}
         </Row>
       </Container>
-      <Row xs={1} md={2} className="g-3">
-        {products.map((product, index) => (
-          <Col key={index} xs={3} sm={6} lg={3} className="product-column">
-            <ProductCard product={product} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
     </div>
   );
 };

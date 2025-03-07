@@ -7,14 +7,11 @@ import { Container, Row } from "react-bootstrap";
 
 function HomePage() {
   return (
-    <div>
-      <Container>
+    <div className="homepage">
+      <Container className="homepage-container">
         <Row className="justify-content-md-center">
-          <main style={{ display: "flex" }}>
-            <div>
-              <DanhMuc />
-            </div>
-            <div style={{ flex: "3 1 auto" }}>
+          <main className="homepage-main">
+            <div className="banner-container">
               <Banner />
             </div>
           </main>

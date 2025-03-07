@@ -10,56 +10,36 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <div>
-      <Navbar
-        bg="light"
-        expand="lg"
-        className="navbar-shadow"
-        style={{ padding: "10px", paddingTop: "8px" }}
-      >
-        <Container>
-          <Image src={logo} roundedCircle width={80} height={80} />
-          <Link to="/home" className="nav-link">
-            <h1 style={{ fontSize: 30 }}>Tempest Gaming</h1>
-          </Link>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav" />
-          <Form inline>
-            <Row>
-              <Col xs="auto">
-                <Form.Control
-                  type="text"
-                  placeholder="Search"
-                  className=" mr-sm-2"
-                />
-              </Col>
-            </Row>
-          </Form>
-          <Nav className="me-auto">
-            <Row>
-              <Col xs="auto">
-                <Link
-                  to="/login"
-                  className="nav-link"
-                  style={{fontSize: "23px"}}
-                >
-                  <i className="bi bi-person-fill"></i>
-                </Link>
-              </Col>
-              <Col xs="auto">
-                <Link
-                  to="/console"
-                  className="nav-link"
-                  style={{fontSize: "21px"}}
-                >
-                  <i className="bi bi-cart-fill"></i>
-                </Link>
-              </Col>
-            </Row>
+    <Navbar bg="light" expand="lg" className="navbar-shadow">
+      <Container>
+        <Link to="/home" className="navbar-brand">
+          <Image src={logo} roundedCircle width={110} height={110} />
+        </Link>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto align-items-center">
+            <Link to="/console" className="nav-link console-link" style={{fontSize: "1.5rem", paddingLeft: "10"}}>
+              Console
+            </Link>
           </Nav>
-        </Container>
-      </Navbar>
-    </div>
+          <Form className="d-flex search-form">
+            <Form.Control
+              type="text"
+              placeholder="Search"
+              className="mr-sm-2"
+            />
+          </Form>
+          <Nav className="align-items-center">
+            <Link to="/login" className="nav-link">
+              <i className="bi bi-person-fill icon-large"></i>
+            </Link>
+            <Link to="/console" className="nav-link">
+              <i className="bi bi-cart-fill icon-large"></i>
+            </Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
