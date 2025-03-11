@@ -1,8 +1,8 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Header from "./components/Header";
+import Header from "./fontend/components/Header";
 import { Outlet } from "react-router-dom";
-import "./styles/App.css";
+import "./fontend/styles/App.css";
 
 function App() {
   return (

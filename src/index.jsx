@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ConsolePage from "./pages/ConsolePage";
-import LoginPage from "./pages/LoginPage";
-import ResignPage from "./pages/ResignPage";
+import HomePage from "./fontend/pages/HomePage";
+import ConsolePage from "./fontend/pages/ConsolePage";
+import LoginPage from "./fontend/pages/LoginPage";
+import ResignPage from "./fontend/pages/ResignPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

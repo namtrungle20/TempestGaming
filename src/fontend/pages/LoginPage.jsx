@@ -3,7 +3,8 @@ import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
 import logo from "../assets/images/logo_tempest_gaming.png";
 import Backgroud from "../assets/images/backgroudMP4.mp4";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/HomePage.css";
+import { Link } from "react-router-dom";
+
 
 function LoginPage(props) {
   return (
@@ -19,28 +20,29 @@ function LoginPage(props) {
             </Container>
             <Form>
               <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" placeholder="Nhập email" />
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Label>Mật Khẩu</Form.Label>
+                <Form.Control type="password" placeholder="Nhập Mật Khẩu" />
               </Form.Group>
 
               <Form.Group controlId="formBasicCheckbox">
                 <Form.Check type="checkbox" label="Remember me" />
               </Form.Group>
-
+              <Link to={"/home"} className="text-center">
               <Button variant="primary" type="submit" className="w-100">
                 Login
               </Button>
+              </Link>
             </Form>
             <div className="text-center mt-3">
               <a href="#forgot">Forgot password?</a>
             </div>
             <div className="text-center mt-3">
-              <a href="#register">Register</a>
+              <Link to="/resign">Register</Link>
             </div>
             <hr />
             <div className="text-center">
