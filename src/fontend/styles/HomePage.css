@@ -1,0 +1,24 @@
+.homepage-container {
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .view-all {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .view-all a {
+    font-size: 16px;
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .view-all a:hover {
+    text-decoration: underline;
+  }

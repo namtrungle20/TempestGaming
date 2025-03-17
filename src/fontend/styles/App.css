@@ -1,0 +1,184 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-size: cover;
+}
+
+.header {
+  margin-bottom: 0px;
+  background-color: aqua;
+}
+
+.danhmuc {
+  width: 100%; /* Make it responsive */
+  height: auto; /* Make it responsive */
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.nav-category {
+  font-size: 30px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  transition: 0.3s;
+}
+
+.nav-category:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.banner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: bisque;
+}
+
+.banner h1 {
+  display: block;
+}
+
+footer {
+  padding: 10px 0;
+}
+
+.homepage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: self-start;
+}
+
+.homepage-container {
+  width: 100%;
+  max-width: 1400px; /* Increase the max-width to make the UI wider */
+  padding: 20px;
+}
+
+.homepage-main {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
+
+.danhmuc-container {
+  flex: 1;
+  margin-right: 20px;
+  min-width: 300px; /* Ensure a minimum width */
+}
+
+.banner-container {
+  flex: 3;
+  min-width: 600px; /* Ensure a minimum width */
+}
+
+.login-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Align items to the center */
+  overflow: hidden;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  padding: 70px; /* Increase padding to make the container larger */
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  max-width: 1090px; /* Increase the max-width to make the UI wider */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-section {
+  padding: 20px;
+}
+
+.illustration-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.illustration-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.product-card img {
+  border-bottom: 1px solid #ddd;
+}
+
+.product-card .card-body {
+  text-align: center;
+}
+
+.product-card .card-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.product-card .card-text {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.product-card .btn {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.product-card .btn:hover {
+  background-color: #0056b3;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .danhmuc-container, .banner-container {
+    flex: 1 1 100%; /* Make each container take full width on small screens */
+    margin-right: 0;
+  }
+}
