@@ -3,6 +3,7 @@ const express = require('express');
 const apiRoute = require('./routes/api');
 const configViewEngine = require('./config/viewEngine');
 
+
 const app = express();
 const PORT = process.env.PORT || 8888;
 
@@ -18,7 +19,7 @@ webAPI.get('/', apiRoute);
 
 //khai báo route
 // app.use('/api/hello', apiRoute);
-app.use('/', apiRoute);
+app.use('/', webAPI);
 
 // Khởi động server
 app.listen(PORT, () => {
