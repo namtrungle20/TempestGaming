@@ -2,10 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const apiRoute = require('./routes/api');
 const configViewEngine = require('./config/viewEngine');
+const cors = require('cors');
 
 
 const app = express();
 const PORT = process.env.PORT || 8888;
+
+// CORS
+app.use(cors());
 
 // Middleware
 app.use(express.json());
