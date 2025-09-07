@@ -3,6 +3,7 @@ const express = require('express');
 const apiRoute = require('./routes/api');
 const configViewEngine = require('./config/viewEngine');
 const cors = require('cors');
+const connectDB = require('./config/database');
 
 
 const app = express();
@@ -25,7 +26,15 @@ webAPI.get('/', apiRoute);
 // app.use('/api/hello', apiRoute);
 app.use('/', webAPI);
 
-// Khởi động server
-app.listen(PORT, () => {
-  console.log(`Server chạy tại http://localhost:${PORT}`);
-});
+(async () => {
+  try {
+    await connectDB();
+    
+    // Khởi động server
+    app.listen(PORT, () => {
+      console.log(`Server chạy tại http://0.0.0.0:${PORT}`);
+    })
+  } catch (error) {
+    console.error('Lỗi khởi động server:', error);
+  }
+})();
