@@ -1,20 +1,20 @@
-import { useEffect } from 'react'
-import axios from './util/axios.customize'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import AdminWelcome from "./pages/AdminWelcome.jsx";
+import UserWelcome from "./pages/UserWelcome.jsx";
 
 
 function App() {
-
-  useEffect(() => {
-    const helloWorld = async () => {
-      const res = await axios.get(`/`);
-      console.log(">>> check res:", res)
-    }
-    helloWorld()
-  }, [])
-
   return (
-    <>Hello Word</>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/admin" element={<AdminWelcome />} />
+        <Route path="/user" element={<UserWelcome />} />
+      </Routes>
+    </Router>
+  );
+
 }
 
 export default App
