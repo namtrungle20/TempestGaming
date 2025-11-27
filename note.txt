@@ -1,0 +1,6 @@
+Một số snippet hay dùng
+- rafce → React Arrow Function Component + Export Default
+- rafc → React Arrow Function Component (không export)
+- rfc → React Function Component (dùng function thường)
+- rcc → React Class Component
+- rconst → Tạo constructor trong class component
