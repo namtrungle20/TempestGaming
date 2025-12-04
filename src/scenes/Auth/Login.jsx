@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/authService"; // import service
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,29 +11,23 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/api/nguoidung/dangnhap",
-        { email, password }
-      );
-
-      const { token, nguoidung } = res.data.data;
-      const vaitro = nguoidung.vaitro; // lấy từ bên trong object nguoidung
+      const data = await loginUser(email, password);
+      const { token, nguoidung } = data;
+      const vaitro = nguoidung.vaitro;
 
       localStorage.setItem("token", token);
       localStorage.setItem("vaitro", vaitro);
       localStorage.setItem("email", nguoidung.email || email);
 
       const roleInt = Number(vaitro);
-
       if (roleInt === 1) {
         navigate("/admin");
       } else if (roleInt === 2) {
         navigate("/user");
       }
-
     } catch (err) {
       console.error(err);
-      setError("Sai email hoặc mật khẩu!");
+      setError(err.message);
     }
   };
 
