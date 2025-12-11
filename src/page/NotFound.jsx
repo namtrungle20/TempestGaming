@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Topbar() {
+export default function NotFound() {
     return (
         <div>
-            <p1>Topbar</p1>
+            page 404
         </div>
     )
 }

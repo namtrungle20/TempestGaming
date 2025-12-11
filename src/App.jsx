@@ -1,19 +1,22 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./scenes/Auth/Login.jsx";
-import AdminDashboard from "./scenes/Admin/Dashboard.jsx";
-import UserDashboard from "./scenes/User/UserDashboard.jsx";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
+import SignIn from "./page/Auth/SignIn.jsx";
+import SignUp from "./page/Auth/SignUp.jsx";
+import HomePage from "./page/HomePage.jsx"
+import NotFound from "./page/NotFound.jsx";
+
 
 
 function App() {
-  return (
-    <Router>
+  return <>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/user" element={<UserDashboard />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
-    </Router>
-  );
+    </BrowserRouter>
+  </>
 
 }
 
