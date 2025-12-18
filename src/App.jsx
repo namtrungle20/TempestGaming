@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
-import SignIn from "./page/Auth/SignIn.jsx";
-import SignUp from "./page/Auth/SignUp.jsx";
+import SignIn from "./page/Auth/SignInPage.jsx";
+import SignUp from "./page/Auth/SignUpPage.jsx";
 import HomePage from "./page/HomePage.jsx"
 import NotFound from "./page/NotFound.jsx";
+import { Toaster } from "sonner";
 
 
 
 function App() {
   return <>
+    <Toaster richColors/>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
