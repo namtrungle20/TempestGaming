@@ -3,11 +3,27 @@ import User from "@/models/User";
 import { login } from "@/libs/auth";
 
 
+const getInitialUser = () => {
+    const data = localStorage.getItem("nguoidung");
 
+    // Nếu ngăn kéo trống (null) hoặc bị kẹt chữ "undefined"
+    if (!data || data === "undefined") {
+        return null;
+    }
+
+    try {
+        // Chỉ parse khi chắc chắn data là một chuỗi JSON hợp lệ
+        return new User(JSON.parse(data));
+    } catch {
+        console.error("Dữ liệu lưu trữ bị lỗi, đang xóa...");
+        localStorage.removeItem("nguoidung");
+        return null;
+    }
+};
 
 export const useAuthStore = create((set) => ({
     accessToken: localStorage.getItem("accessToken") || null,
-    user: localStorage.getItem("user") ? new User(JSON.parse(localStorage.getItem("user"))) : null,
+    user: getInitialUser(),
     loading: false,
 
     signIn: async (loginKey, password) => {
@@ -16,13 +32,13 @@ export const useAuthStore = create((set) => ({
 
             const data = await login({
                 email: loginKey,
-                matkhau: password
+                password: password
             });
 
-            const cleanUser = new User(data.nguoidung);
+            const cleanUser = new User(data);
 
-            localStorage.getItem("accessToken", data.accessToken);
-            localStorage.getItem("user", JSON.stringify(data.nguoidung));
+            localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("nguoidung", JSON.stringify(data));
 
             set({
                 accessToken: data.accessToken,
@@ -30,11 +46,11 @@ export const useAuthStore = create((set) => ({
                 loading: false
             })
             return { success: true };
-        } catch {
+        } catch (error) {
             set({ loading: false });
-            return { success: false, message: "Tài khoản hoặc mật khẩu không đúng" }
+            console.error("Lỗi đăng nhập chi tiết:", error);
+            const errMsg = error.response?.data?.message || "Tài khoản hoặc mật khẩu không đúng";
+            return { success: false, errMsg }
         }
     }
-
-
 }));

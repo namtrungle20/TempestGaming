@@ -7,8 +7,8 @@ export const login = async (credentials) => {
   // Lưu mọi thứ vào localStorage theo yêu cầu của bạn
   localStorage.setItem('accessToken', data.accessToken);
   localStorage.setItem('refreshToken', data.refreshToken);
-  localStorage.setItem('user', JSON.stringify(data.nguoidung));
-  localStorage.setItem('vaitro', data.nguoidung.vaitro);
+  localStorage.setItem('nguoidung', JSON.stringify(data));
+  localStorage.setItem('vaitro', data.vaitro);
 
   return data;
 };
