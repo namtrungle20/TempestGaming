@@ -1,11 +1,18 @@
 export default class User {
     constructor(data) {
-        this.id = data.nguoidung_id || '';
-        this.email = data.email || '';
-        this.sdt = data.sdt || '';
-        this.vaitro = data.vaitro || 2;
-        this.diachi = data.diachi || '';
-        this.avatar = data.avatar || '';
-        this.ngayvao = data.ngayvao || new Date().toISOString();
+
+        const safeData = data || {};
+
+        this.id = safeData.nguoidung_id || safeData._id || '';
+        this.email = safeData.email || '';
+        this.sdt = safeData.sdt || '';
+        this.vaitro = safeData.vaitro !== undefined ? String(safeData.vaitro) : '2';
+        this.diachi = safeData.diachi || '';
+        this.avatar = safeData.avatar || '';
+        this.ngayvao = safeData.ngayvao || new Date().toISOString();
+    }
+
+    isAdmin() {
+        return this.vaitro === '1';
     }
 }

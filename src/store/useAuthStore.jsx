@@ -30,27 +30,39 @@ export const useAuthStore = create((set) => ({
         try {
             set({ loading: true });
 
-            const data = await login({
+            // 1. Gọi login (Kết quả trả về là { success, data, message })
+            const result = await login({
                 email: loginKey,
                 password: password
             });
 
-            const cleanUser = new User(data);
+            if (result.success) {
+                // Dựa trên JSON bạn gửi, cấu trúc là result.data.data.nguoidung
+                const userRawData = result.data.data.nguoidung;
+                const token = result.data.data.accessToken;
 
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("nguoidung", JSON.stringify(data));
+                const cleanUser = new User(userRawData);
 
-            set({
-                accessToken: data.accessToken,
-                user: cleanUser,
-                loading: false
-            })
-            return { success: true };
+                localStorage.setItem("accessToken", token);
+                localStorage.setItem("nguoidung", JSON.stringify(userRawData));
+
+                set({
+                    accessToken: token,
+                    user: cleanUser,
+                    loading: false
+                });
+
+                // Trả về userRawData để useAuth.js dùng làm currentUser
+                return { success: true, data: userRawData };
+            }
+
+            set({ loading: false });
+            return result;
+
         } catch (error) {
             set({ loading: false });
-            console.error("Lỗi đăng nhập chi tiết:", error);
-            const errMsg = error.response?.data?.message || "Tài khoản hoặc mật khẩu không đúng";
-            return { success: false, errMsg }
+            console.error("Lỗi Store:", error);
+            return { success: false, message: "Lỗi kết nối hệ thống" };
         }
     }
 }));
