@@ -7,7 +7,7 @@ export const dataProvider = {
 
         if (resource === 'nguoidung') {
             // Theo ý bạn: Backend dùng POST để lấy danh sách
-            response = await axiosInstance.post('/nguoidung', {
+            response = await axiosInstance.post('/dangnhap', {
                 // Bạn có thể truyền params nếu backend cần phân trang/tìm kiếm
                 pagination: params.pagination,
                 filter: params.filter

@@ -6,11 +6,13 @@ export default function UserEdit() {
             <Edit title="Chỉnh sửa người dùng">
                 <SimpleForm>
                     <TextInput source="id" disabled />
-                    <TextInput source="hoten" fullWidth />
-                    <TextInput source="loginKey" label="Tên đăng nhập" fullWidth />
-                    <SelectInput source="vaitro" choices={[
-                        { id: 'admin', name: 'Quản trị viên' },
-                        { id: 'user', name: 'Người dùng' },
+                    <TextInput source="email" disabled />
+                    <TextInput source="sdt" label="Số điện thoại" />
+                    <TextInput source="diachi" label="Địa chỉ" multiline />
+
+                    <SelectInput source="vaitro" label="Quyền truy cập" choices={[
+                        { id: '1', name: 'Admin (Quản trị)' },
+                        { id: '2', name: 'User (Khách hàng)' },
                     ]} />
                 </SimpleForm>
             </Edit>
