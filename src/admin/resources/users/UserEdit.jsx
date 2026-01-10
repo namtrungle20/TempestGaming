@@ -1,21 +1,27 @@
-import { Edit, SimpleForm, TextInput, SelectInput } from 'react-admin';
+import { Edit, SimpleForm, TextInput, SelectInput, BooleanInput } from 'react-admin';
 
-export default function UserEdit() {
+export default function UserEdit(props) {
     return (
-        <>
-            <Edit title="Chỉnh sửa người dùng">
-                <SimpleForm>
-                    <TextInput source="id" disabled />
-                    <TextInput source="email" disabled />
-                    <TextInput source="sdt" label="Số điện thoại" />
-                    <TextInput source="diachi" label="Địa chỉ" multiline />
+        <Edit {...props} title="Chỉnh sửa & Khóa tài khoản">
+            <SimpleForm>
+                <TextInput source="id" disabled label="Mã người dùng" />
+                <TextInput source="email" fullWidth />
+                <TextInput source="sdt" label="Số điện thoại" />
+                <TextInput source="diachi" label="Địa chỉ" fullWidth />
 
-                    <SelectInput source="vaitro" label="Quyền truy cập" choices={[
-                        { id: '1', name: 'Admin (Quản trị)' },
-                        { id: '2', name: 'User (Khách hàng)' },
-                    ]} />
-                </SimpleForm>
-            </Edit>
-        </>
-    )
-}
+                {/* Chọn vai trò */}
+                <SelectInput source="vaitro" id="vai_tro" label="Quyền hạn" choices={[
+                    { id: 1, name: 'Admin' },
+                    { id: 2, name: 'Khách hàng' },
+                ]} />
+
+                {/* TÍNH NĂNG KHÓA (LOCK) */}
+                <BooleanInput
+                    source="is_lock"
+                    id="is_lock"
+                    label="Khóa tài khoản này (Người dùng sẽ không thể đăng nhập)"
+                />
+            </SimpleForm>
+        </Edit>
+    );
+};

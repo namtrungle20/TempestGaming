@@ -3,48 +3,56 @@ import axiosInstance from "@/libs/auth"; // Import cái axios bạn đã cài đ
 export const dataProvider = {
     // 1. Lấy danh sách (Sử dụng POST cho 'nguoidung')
     getList: async (resource, params) => {
-        let response;
-
         if (resource === 'nguoidung') {
-            // Theo ý bạn: Backend dùng POST để lấy danh sách
-            response = await axiosInstance.post('/dangnhap', {
-                // Bạn có thể truyền params nếu backend cần phân trang/tìm kiếm
-                pagination: params.pagination,
-                filter: params.filter
-            });
-        } else {
-            // Các resource khác (nếu có) dùng GET chuẩn
-            response = await axiosInstance.get(`/${resource}`);
+            try {
+                // Gọi đúng API của bạn
+                const response = await axiosInstance.post(`/${resource}/danh-sach`, {
+                    pagination: params.pagination,
+                    sort: params.sort,
+                    filter: params.filter
+                });
+
+                // 1. Kiểm tra cấu trúc: API trả về { data: { nguoidung: [...] } }
+                const rawData = response.data?.data || [];
+
+                // 2. Ép kiểu về mảng để an toàn
+                const finalArray = Array.isArray(rawData) ? rawData : [];
+
+                // 3. Map lại dữ liệu: React-Admin BẮT BUỘC phải có trường "id"
+                const mappedData = finalArray.map(item => ({
+                    ...item,
+                    id: item.nguoidung_id, // Lấy nguoidung_id gán vào id
+                }));
+
+                return {
+                    data: mappedData,
+                    total: response.data?.total || mappedData.length,
+                };
+            } catch (error) {
+                console.error("Lỗi gọi API danh sách:", error);
+                return { data: [], total: 0 };
+            }
         }
-
-        // React-admin cần { data: [...], total: số_lượng }
-        // Và mỗi item phải có trường "id"
-        const rawData = response.data.data || response.data; // Tùy vào backend trả về object hay array trực tiếp
-
-        return {
-            data: rawData.map(item => ({
-                ...item,
-                id: item.nguoidung_id, // Quan trọng: chuyển _id thành id
-            })),
-            total: rawData.length,
-        };
+        return { data: [], total: 0 };
     },
 
     // 2. Lấy 1 bản ghi chi tiết (để đổ vào form Edit)
     getOne: async (resource, params) => {
-        const response = await axiosInstance.get(`/${resource}/${params.id}`);
-        const item = response.data.data || response.data;
-        return {
-            data: { ...item, id: item.nguoidung_id },
-        };
-    },
+        if (resource === 'nguoidung') {
+            // Gọi đến API POST /nguoidung/chi-tiet (hoặc route bạn đặt cho postNguoiDungById)
+            const response = await axiosInstance.post(`/${resource}/chi-tiet`, {
+                id: params.id // Gửi ID trong body theo yêu cầu bảo mật của bạn
+            });
 
-    // 3. Cập nhật dữ liệu
-    update: async (resource, params) => {
-        const response = await axiosInstance.put(`/${resource}/${params.id}`, params.data);
-        return {
-            data: { ...response.data, id: response.data.nguoidung_id },
-        };
+            const userData = response.data?.data;
+            return {
+                data: { 
+                    ...userData, 
+                    id: userData.nguoidung_id // Map lại id cho React-admin
+                }
+            };
+        }
+        return { data: {} };
     },
 
     // 4. Xóa dữ liệu

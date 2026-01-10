@@ -9,7 +9,7 @@ export default function HomePage() {
           Tempest Gaming
         </h1>
         <p className="text-slate-500 mt-2 font-medium">
-          Test Hàng
+          Test Lại
         </p>
         
         <button className="mt-8 px-8 py-3 bg-slate-800 text-white rounded-full font-bold shadow-lg hover:bg-slate-700 transition-all">

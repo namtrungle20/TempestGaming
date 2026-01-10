@@ -6,7 +6,4 @@ import PeopleIcon from '@mui/icons-material/People';
 export default {
     list: UserList,
     edit: UserEdit,
-    // create: UserCreate,
-    // icon: PeopleIcon,
-    recordRepresentation: 'hoten', // Hiển thị tên người dùng khi được tham chiếu ở các bảng khác
 };

@@ -28,7 +28,9 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Nếu lỗi 401 (Unauthorized), có thể logout hoặc refresh token tại đây
-      console.error("Phiên đăng nhập hết hạn");
+      console.warn("Token hết hạn hoặc không hợp lệ, đang đăng xuất...");
+      localStorage.clear();
+      window.location.href = '/signin';
     }
     return Promise.reject(error);
   }

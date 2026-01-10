@@ -5,7 +5,7 @@ import users from './resources';
 
 export const AdminDashboard = () => (
     <Admin basename="/admin"
-        dataProvide={dataProvider}
+        dataProvider={dataProvider}
         authProvider={authProvider}>
 
         <Resource

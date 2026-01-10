@@ -9,10 +9,15 @@ export default class User {
         this.vaitro = safeData.vaitro !== undefined ? String(safeData.vaitro) : '2';
         this.diachi = safeData.diachi || '';
         this.avatar = safeData.avatar || '';
+        this.is_lock = safeData.is_lock !== undefined ? safeData.is_lock : '0';
         this.ngayvao = safeData.ngayvao || new Date().toISOString();
     }
 
     isAdmin() {
         return this.vaitro === '1';
     }
+    isLocked() {
+        return this.is_lock === '0';
+    }
+
 }
