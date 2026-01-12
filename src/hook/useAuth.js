@@ -22,6 +22,9 @@ export const useAuth = () => {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
+
+        if (loading) return;
+
         const result = await signIn(formData.loginKey, formData.password);
 
         if (result.success) {
@@ -35,10 +38,10 @@ export const useAuth = () => {
 
                 if (currentUser.isAdmin()) {
                     console.log("Đang chuyển hướng sang /admin...");
-                    navigate('/admin');
+                    navigate('/admin', { replace: true });
                 } else {
                     console.log("Đang chuyển hướng sang /...");
-                    navigate('/');
+                    navigate('/', { replace: true });
                 }
             } catch (error) {
                 console.error("Lỗi khi xử lý dữ liệu User:", error);

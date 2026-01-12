@@ -1,64 +1,88 @@
-import { List, Datagrid, TextField, EmailField, ChipField, EditButton, DeleteButton, FunctionField, TextInput, BooleanField } from 'react-admin';
+import React from 'react';
+import {
+    List,
+    Datagrid,
+    TextField,
+    EmailField,
+    FunctionField,
+    TextInput,
+} from 'react-admin';
 
-const userFilters = [
-    <TextInput label="Tìm theo Email" source="q" alwaysOn />, // Luôn hiện ô search
+// 1. Đưa Filter ra ngoài hoàn toàn để không bao giờ bị re-create khi UserList render
+const UserFilters = [
+    <TextInput key="search" label="Tìm kiếm" source="q" alwaysOn />,
 ];
 
-export default function UserList(props) {
+// 2. Tách nhỏ các logic render Style để React-admin tối ưu hóa việc diffing DOM
+const StatusBadge = ({ record }) => {
+    const isLocked = Number(record?.is_lock) === 1;
     return (
-        <List {...props} filters={userFilters} title="Quản lý thành viên">
-            <Datagrid rowClick="edit">
-                {/* 1. SỬA TẠI ĐÂY: Dùng source="id" vì trong dataProvider bạn đã gán id = item.nguoidung_id */}
+        <span style={{
+            backgroundColor: isLocked ? '#ffebee' : '#e8f5e9',
+            color: isLocked ? '#d32f2f' : '#2e7d32',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '0.85rem',
+            fontWeight: 'bold',
+            display: 'inline-block',
+            minWidth: '90px',
+            textAlign: 'center'
+        }}>
+            {isLocked ? '🚫 Đã khóa' : '✅ Hoạt động'}
+        </span>
+    );
+};
+
+const RoleBadge = ({ record }) => {
+    const isAdmin = Number(record?.vaitro) === 1;
+    return (
+        <span style={{ 
+            color: isAdmin ? '#d32f2f' : '#2e7d32', 
+            fontWeight: 'bold' 
+        }}>
+            {isAdmin ? 'Admin' : 'Khách hàng'}
+        </span>
+    );
+};
+
+const UserList = (props) => {
+    // Log này bây giờ sẽ chỉ chạy 1-2 lần. Nếu vẫn nhảy liên tục => Lỗi tại AdminDashboard
+    console.log("🚀 RENDER CHECK:", new Date().toLocaleTimeString());
+
+    return (
+        <List
+            {...props}
+            title="Quản lý thành viên"
+            perPage={10}
+            filters={UserFilters}
+            sort={{ field: 'id', order: 'DESC' }}
+            
+            /* CÁC CHỐT CHẶN HIỆU NĂNG */
+            disableSyncWithLocation // Chặn đứng việc ghi URL gây loop
+            storeKey={false}        // Chặn đứng việc ghi vào Redux/Store gây lặp
+            pagination={false}         // Chỉ trigger search sau khi ngừng gõ 0.5s
+        >
+            <Datagrid optimized
+                rowClick="edit" 
+                bulkActionButtons={false}
+            >
                 <TextField source="id" label="ID" />
-
                 <EmailField source="email" label="Email" />
-
-                {/* Đảm bảo source "sdt" viết thường giống hệt trong Database/API */}
                 <TextField source="sdt" label="Số điện thoại" />
-                <TextField source="diachi" label="Địa Chỉ" />
 
-                <FunctionField
-                    label="Trạng thái"
-                    source="is_lock"
-                    render={record => {
-                        // Kiểm tra record.is_lock là số 1 hoặc chuỗi '1'
-                        const isLocked = record.is_lock === 1 || record.is_lock === '1';
-                        return (
-                            <span style={{
-                                backgroundColor: isLocked ? '#ffebee' : '#e8f5e9',
-                                color: isLocked ? '#d32f2f' : '#2e7d32',
-                                padding: '4px 8px',
-                                borderRadius: '4px',
-                                fontSize: '0.85rem',
-                                fontWeight: 'bold',
-                                display: 'inline-flex',
-                                alignItems: 'center'
-                            }}>
-                                {isLocked ? '🚫 Đã khóa' : '✅ Hoạt động'}
-                            </span>
-                        );
-                    }}
+                <FunctionField 
+                    label="Trạng thái" 
+                    render={record => <StatusBadge record={record} />} 
                 />
 
-                {/* 2. Dùng FunctionField để hiển thị Role cho chuyên nghiệp */}
-                <FunctionField
-                    label="Vai trò"
-                    render={record => {
-                        const isPrimary = record.vaitro === 1 || record.vaitro === '1';
-                        return (
-                            <span style={{
-                                color: isPrimary ? 'red' : 'green',
-                                fontWeight: 'bold'
-                            }}>
-                                {isPrimary ? 'Admin' : 'Khách hàng'}
-                            </span>
-                        );
-                    }}
+                <FunctionField 
+                    label="Vai trò" 
+                    render={record => <RoleBadge record={record} />} 
                 />
-
-                <EditButton />
-                <DeleteButton />
             </Datagrid>
         </List>
     );
-}
+};
+
+// Sử dụng memo để tránh re-render khi component cha thay đổi state không liên quan
+export default UserList;

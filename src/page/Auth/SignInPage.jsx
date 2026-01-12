@@ -24,16 +24,18 @@ export default function SignInPage() {
             <p className="text-slate-500 font-medium">Chào mừng trở lại, chiến binh!</p>
           </div>
 
-         <form onSubmit={handleSignIn} className="flex flex-col gap-4">
-            
+          <form onSubmit={handleSignIn} className="flex flex-col gap-4">
+
             <Input
-              name="loginKey" // Phải khớp với key trong formData của hook
+              name="loginKey"
               value={formData.loginKey}
               onChange={handleChange}
               type="text"
+              // Thay đổi Label để người dùng biết có thể chọn 1 trong 2
               label="Email hoặc Số điện thoại"
-              placeholder="nhap.email@tempest.com"
+              placeholder="Email hoặc Số điện thoại"
               labelPlacement="outside"
+              // Icon Mail vẫn phù hợp, hoặc bạn có thể dùng icon User để trung lập hơn
               startContent={<Mail className="text-black" size={18} />}
               variant="bordered"
               classNames={{

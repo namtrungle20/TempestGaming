@@ -61,8 +61,12 @@ export const useAuthStore = create((set) => ({
 
         } catch (error) {
             set({ loading: false });
-            console.error("Lỗi Store:", error);
-            return { success: false, message: "Lỗi kết nối hệ thống" };
+            const serverMessage = error.response?.data?.message || "Lỗi kết nối hệ thống";
+            console.error("Lỗi Store:", serverMessage);
+            return {
+                success: false,
+                message: serverMessage // Bây giờ message sẽ là "Tài khoản của bạn đã bị khóa..."
+            };
         }
     }
 }));

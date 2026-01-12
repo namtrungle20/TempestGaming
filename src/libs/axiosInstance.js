@@ -26,11 +26,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    // CHỈ xóa token, KHÔNG redirect thủ công bằng window.location
     if (error.response && error.response.status === 401) {
-      // Nếu lỗi 401 (Unauthorized), có thể logout hoặc refresh token tại đây
-      console.warn("Token hết hạn hoặc không hợp lệ, đang đăng xuất...");
-      localStorage.clear();
-      window.location.href = '/signin';
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('nguoidung');
+      // Hãy để authProvider của React-Admin lo việc redirect
     }
     return Promise.reject(error);
   }

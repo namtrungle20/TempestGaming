@@ -36,3 +36,68 @@ src/
 │
 ├── App.jsx         # [TỔNG TÀI ĐIỀU PHỐI] Quản lý Route và Phân quyền.
 └── index.css       # [STYLE TOÀN CỤC] Background đường chân trời & biến CSS.
+
+
+Mô Tả Nghiệp Vụ - TempestGaming System
+(Tài liệu phục vụ Luận văn Tốt nghiệp)
+
+1. Tổng Quan Dự Án
+TempestGaming là hệ thống thương mại điện tử và quản lý cửa hàng chuyên về các thiết bị giải trí (Console) và đĩa game bản quyền. Hệ thống không chỉ phục vụ việc mua bán thông thường mà còn tích hợp mô hình kinh tế Cho thuê (Rental) và Membership phức tạp, nhằm tối ưu hóa vòng đời sản phẩm và gia tăng trải nghiệm khách hàng.
+
+2. Các Phân Hệ Nghiệp Vụ Cốt Lõi
+
+2.1. Quản Trị Người Dùng & Bảo Mật (User Identity & Security Access)
+Nghiệp vụ này đảm bảo tính xác thực và an toàn cho tài khoản, đặc biệt quan trọng vì hệ thống có liên quan đến giao dịch tiền tệ và tài sản thuê giá trị cao.
+
+Đăng ký & Xác thực (Registration & Auth):
+Hỗ trợ đăng ký qua Email/Phone.
+Tích hợp OAuth2 (Google, Facebook).
+KYC (Know Your Customer) cơ bản: Đối với người dùng muốn sử dụng dịch vụ Cho thuê, bắt buộc phải cập nhật thông tin Căn cước công dân (CCCD) hoặc Hộ chiếu để xác minh danh tính thật.
+Bảo mật tài khoản:
+Mã hóa mật khẩu (Hashing).
+Cơ chế Token-based Authentication (JWT): Sử dụng Access Token ngắn hạn và Refresh Token dài hạn để duy trì phiên đăng nhập an toàn.
+Quản lý phiên (Session Management): Cho phép người dùng đăng xuất từ xa khỏi các thiết bị khác.
+
+2.2. Nghiệp Vụ Bán Hàng (Sales Management)
+Quản lý vòng đời mua bán các sản phẩm phần cứng (Máy Console: PS5, Xbox, Nintendo Switch) và phần mềm (Đĩa game).
+
+Quản lý Kho hàng (Inventory):
+Theo dõi số lượng tồn kho thực tế (Real-time stock).
+Cảnh báo khi số lượng dưới mức tối thiểu (Low stock alert).
+Quy trình Đặt hàng (Order Processing):
+Giỏ hàng (Cart) -> Thanh toán (Checkout) -> Xử lý đơn (Processing) -> Giao hàng (Shipping) -> Hoàn tất (Completed).
+Hỗ trợ nhiều phương thức thanh toán: COD, Chuyển khoản ngân hàng (QR Code), Ví điện tử.
+
+2.3. Nghiệp Vụ Cho Thuê (Rental Service Management) - Trọng tâm
+Đây là nghiệp vụ phức tạp nhất, quản lý việc cho thuê máy chơi game và đĩa game.
+
+Mô hình Cho thuê:
+Thuê theo giờ/ngày: Áp dụng cho chơi tại quán (nếu có) hoặc mang về.
+Gói thuê dài hạn: Thuê theo tuần/tháng với giá ưu đãi.
+Điều kiện Cho thuê (Rental Conditions):
+Đặt cọc (Deposit): Khách hàng phải đặt cọc một khoản tiền (thường là 70-100% giá trị máy) hoặc tài sản đảm bảo (giấy tờ gốc) tùy theo hạng thành viên.
+Hợp đồng Thuê: Sinh ra hợp đồng điện tử ghi nhận tình trạng máy trước khi giao (có ảnh chụp xác nhận) để làm căn cứ khi trả máy.
+Quy trình Trả máy & Kiểm tra:
+Nhân viên kiểm tra tình trạng máy (Trầy xước, hỏng hóc, tem bảo hành).
+Phạt (Penalty): Tính phí phạt nếu trả quá hạn (Overdue) hoặc gây hư hỏng thiết bị. Phí này trừ thẳng vào tiền cọc.
+
+2.4. Hệ Thống Thành Viên (Membership & Loyalty)
+Xây dựng lòng trung thành khách hàng thông qua phân hạng và ưu đãi.
+
+Hạng Thành viên (Tiers):
+Newbie: Mới đăng ký.
+Member: Đã có chi tiêu tích lũy > 1.000.000đ.
+VIP/Gold: Chi tiêu > 10.000.000đ (Đặc quyền: Miễn/Giảm tiền cọc khi thuê máy, ưu tiên đặt trước game hot).
+Tích điểm (Point System):
+Quy đổi 1.000đ chi tiêu = 1 điểm.
+Điểm dùng để đổi Voucher hoặc trừ trực tiếp vào hóa đơn tiếp theo (Tiền tố TempestPoint).
+
+2.5. Quản Lý Khuyến Mãi (Promotions)
+Voucher/Coupon: Mã giảm giá theo %, theo số tiền cố định, hoặc miễn phí vận chuyển.
+Flash Sale: Giảm giá sản phẩm trong khung giờ vàng.
+Bundle: Mua kèm giảm giá (Ví dụ: Thuê máy PS5 + Thuê 3 đĩa game giảm 20% tổng bill).
+
+3. Luồng Nghiệp Vụ Chính (Business Flow Diagram - Text)
+Luồng Thuê Máy: User (Login & KYC Verified) -> Chọn Máy & Gói Thuê -> Hệ thống tính tiền Cọc tạm tính -> User Thanh toán Cọc -> Admin duyệt đơn -> Giao máy & Ký biên bản -> Bắt đầu tính giờ thuê.
+
+Luồng Trả Máy: Admin nhận máy -> Kiểm tra tình trạng -> Hệ thống tính phí thực tế (Giá thuê + Phạt nếu có) -> Hoàn lại tiền cọc dư (Tiền cọc - Phí thực tế) -> Cập nhật điểm tích lũy.

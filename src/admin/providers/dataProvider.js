@@ -1,63 +1,53 @@
 import axiosInstance from "@/libs/auth"; // Import cái axios bạn đã cài đặt token
+import { adminConfig } from "../adminConfig";
+import { ensureId } from "../adminUtils";
 
 export const dataProvider = {
-    // 1. Lấy danh sách (Sử dụng POST cho 'nguoidung')
     getList: async (resource, params) => {
-        if (resource === 'nguoidung') {
-            try {
-                // Gọi đúng API của bạn
-                const response = await axiosInstance.post(`/${resource}/danh-sach`, {
-                    pagination: params.pagination,
-                    sort: params.sort,
-                    filter: params.filter
-                });
+        const config = adminConfig[resource];
 
-                // 1. Kiểm tra cấu trúc: API trả về { data: { nguoidung: [...] } }
-                const rawData = response.data?.data || [];
+        // Logic: Nếu có config.list thì dùng POST, không thì mặc định dùng GET theo tên resource
+        const response = config?.list
+            ? await axiosInstance.post(config.list, { ...params.filter })
+            : await axiosInstance.get(`/${resource}`);
 
-                // 2. Ép kiểu về mảng để an toàn
-                const finalArray = Array.isArray(rawData) ? rawData : [];
+        const rawData = response.data.data || response.data;
+        const cleanData = ensureId(rawData);
 
-                // 3. Map lại dữ liệu: React-Admin BẮT BUỘC phải có trường "id"
-                const mappedData = finalArray.map(item => ({
-                    ...item,
-                    id: item.nguoidung_id, // Lấy nguoidung_id gán vào id
-                }));
-
-                return {
-                    data: mappedData,
-                    total: response.data?.total || mappedData.length,
-                };
-            } catch (error) {
-                console.error("Lỗi gọi API danh sách:", error);
-                return { data: [], total: 0 };
-            }
-        }
-        return { data: [], total: 0 };
+        return {
+            data: cleanData,
+            total: response.data.total || cleanData.length,
+        };
     },
 
-    // 2. Lấy 1 bản ghi chi tiết (để đổ vào form Edit)
     getOne: async (resource, params) => {
-        if (resource === 'nguoidung') {
-            // Gọi đến API POST /nguoidung/chi-tiet (hoặc route bạn đặt cho postNguoiDungById)
-            const response = await axiosInstance.post(`/${resource}/chi-tiet`, {
-                id: params.id // Gửi ID trong body theo yêu cầu bảo mật của bạn
-            });
+        const config = adminConfig[resource];
 
-            const userData = response.data?.data;
-            return {
-                data: { 
-                    ...userData, 
-                    id: userData.nguoidung_id // Map lại id cho React-admin
-                }
-            };
-        }
-        return { data: {} };
+        const response = config?.detail
+            ? await axiosInstance.post(config.detail, { id: params.id })
+            : await axiosInstance.get(`/${resource}/${params.id}`);
+
+        return { data: ensureId(response.data.data || response.data) };
     },
 
-    // 4. Xóa dữ liệu
+    update: async (resource, params) => {
+        const config = adminConfig[resource];
+        const url = config?.update || `/${resource}/${params.id}`;
+
+        // Tùy theo API bạn dùng PUT hay POST để update
+        const response = await axiosInstance.put(url, {
+            id: params.id,
+            ...params.data
+        });
+
+        return { data: ensureId(response.data.data || response.data) };
+    },
+
     delete: async (resource, params) => {
-        await axiosInstance.delete(`/${resource}/${params.id}`);
+        const config = adminConfig[resource];
+        const url = config?.delete || `/${resource}/${params.id}`;
+
+        await axiosInstance.delete(url);
         return { data: params.previousData };
-    }
+    },
 };

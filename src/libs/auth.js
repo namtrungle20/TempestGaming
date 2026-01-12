@@ -4,7 +4,7 @@ export const login = async (credentials) => {
   try {
     const response = await axiosInstance.post('/auth/dangnhap', credentials);
     const data = response.data;
-    
+
     // Lưu mọi thứ vào localStorage theo yêu cầu của bạn
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
@@ -20,6 +20,20 @@ export const login = async (credentials) => {
     return { success: false, message };
   }
 };
+
+export const register = async (userData) => {
+  try {
+    const response = await axiosInstance.post('/auth/dangky', userData);
+    const data = response.data;
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Register Error:", error);
+    const message = error.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại!";
+    return { success: false, message };
+  }
+};
+
 export const logout = () => {
   localStorage.clear();
   // Có thể điều hướng về trang login nếu không dùng React-admin logout
