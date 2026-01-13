@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardBody, Input, Button, Checkbox, Link } from "@heroui/react";
-import { Mail, Lock, EyeOff, Eye, LogIn } from "lucide-react";
+import { Mail, Lock, EyeOff, Eye, LogIn, User } from "lucide-react";
 import { useAuth } from '@/hook/useAuth';
 
 
@@ -11,90 +11,110 @@ export default function SignInPage() {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-transparent">
-      {/* Box đăng nhập sử dụng hiệu ứng Kính mờ và Shadow bạn đã thiết lập */}
-      <Card className="w-full max-w-[420px] bg-white/60 backdrop-blur-2xl border-white/50 shadow-tempest rounded-[2.5rem] p-4">
-        <CardBody className="flex flex-col gap-6">
+    /* Container bao phủ toàn màn hình, kế thừa nền từ layout-tempest */
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
 
-          {/* Header của Form */}
-          <div className="flex flex-col gap-2 text-center mb-4">
-            <h1 className="text-4xl font-black italic text-slate-800 tracking-tighter uppercase">
-              COMMING IN SIGN <span className="text-slate-500">MY FRIEND</span>
+      {/* Card: Sử dụng kính mờ siêu mỏng để giống với style Navbar/Home */}
+      <Card className="w-full max-w-[420px] bg-[var(--text-main)]/[0.02] backdrop-blur-3xl border border-[var(--text-main)]/[0.1] shadow-[0_32px_64px_-15px_rgba(0,0,0,0.5)] rounded-[3rem] p-6">
+        <CardBody className="flex flex-col gap-8">
+
+          {/* Header: Typography italic đặc trưng của Tempest */}
+          <div className="flex flex-col gap-2 text-center mt-2">
+            <h1 className="text-5xl font-black italic text-[var(--text-main)] tracking-tighter uppercase leading-[0.8] mb-1">
+              COMING IN <br />
+              <span className="opacity-30 text-3xl">MY FRIEND</span>
             </h1>
-            <p className="text-slate-500 font-medium">Chào mừng trở lại, chiến binh!</p>
+            <p className="text-[var(--text-main)] opacity-40 font-bold uppercase text-[10px] tracking-[0.3em] mt-4">
+              Access the tempest squad
+            </p>
           </div>
 
-          <form onSubmit={handleSignIn} className="flex flex-col gap-4">
-
+          <form onSubmit={handleSignIn} className="flex flex-col gap-6">
+            {/* Input Account */}
             <Input
               name="loginKey"
               value={formData.loginKey}
               onChange={handleChange}
-              type="text"
-              // Thay đổi Label để người dùng biết có thể chọn 1 trong 2
-              label="Email hoặc Số điện thoại"
-              placeholder="Email hoặc Số điện thoại"
+              label="TÀI KHOẢN"
+              placeholder="Email hoặc số điện thoại"
               labelPlacement="outside"
-              // Icon Mail vẫn phù hợp, hoặc bạn có thể dùng icon User để trung lập hơn
-              startContent={<Mail className="text-black" size={18} />}
+              // Thu nhỏ size icon xuống 18, giữ nét đậm 2.5
+              startContent={<User className="text-[var(--text-main)]" size={18} strokeWidth={2.5} />}
               variant="bordered"
               classNames={{
-                inputWrapper: "bg-white/50 border-slate-200 shadow-sm hover:border-slate-400 transition-colors h-12",
-                label: "text-slate-700 font-bold",
-                input: "text-black placeholder:text-slate-400"
+                // h-12 là kích thước chuẩn gọn gàng, giảm border opacity để tinh tế hơn
+                inputWrapper: "bg-[var(--text-main)]/[0.03] border-[var(--text-main)]/[0.1] hover:border-[var(--text-main)]/[0.4] transition-all h-12 rounded-xl px-4",
+                // Chữ label nhỏ hơn (10px) và tăng khoảng cách chữ (tracking-wider)
+                label: "text-[var(--text-main)] font-black uppercase italic text-[10px] tracking-[0.15em] ml-1 mb-1",
+                // Font input nhỏ lại một chút để cân đối
+                input: "text-[var(--text-main)] placeholder:opacity-20 font-medium text-sm"
               }}
               required
             />
 
+            {/* Input Password */}
             <Input
-              name="password" // Phải khớp với key trong formData của hook
+              name="password"
               value={formData.password}
               onChange={handleChange}
               type={isVisible ? "text" : "password"}
-              label="Mật khẩu"
+              label="MẬT KHẨU"
               placeholder="••••••••"
               labelPlacement="outside"
-              startContent={<Lock className="text-black" size={18} />}
+              startContent={<Lock className="text-[var(--text-main)]" size={18} strokeWidth={2.5} />}
               endContent={
-                <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                  {isVisible ? <Eye className="text-slate-400" size={18} /> : <EyeOff className="text-slate-400" size={18} />}
+                <button className="focus:outline-none opacity-40 hover:opacity-100 transition-opacity" type="button" onClick={toggleVisibility}>
+                  {isVisible ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               }
               variant="bordered"
               classNames={{
-                inputWrapper: "bg-white/50 border-slate-200 shadow-sm hover:border-slate-400 transition-colors h-12",
-                label: "text-slate-700 font-bold",
-                input: "text-black placeholder:text-slate-400"
+                inputWrapper: "bg-[var(--text-main)]/[0.03] border-[var(--text-main)]/[0.1] hover:border-[var(--text-main)]/[0.4] transition-all h-12 rounded-xl px-4",
+                // Chữ label nhỏ hơn (10px) và tăng khoảng cách chữ (tracking-wider)
+                label: "text-[var(--text-main)] font-black uppercase italic text-[10px] tracking-[0.15em] ml-1 mb-1",
+                // Font input nhỏ lại một chút để cân đối
+                input: "text-[var(--text-main)] placeholder:opacity-20 font-medium text-sm"
               }}
               required
             />
 
+            {/* Sub-actions */}
             <div className="flex justify-between items-center px-1">
-              <Checkbox size="sm" classNames={{ label: "text-slate-600 font-medium" }}>
-                Ghi nhớ tôi
+              <Checkbox
+                size="sm"
+                classNames={{
+                  label: "text-[var(--text-main)] opacity-50 font-black uppercase text-[10px] tracking-wider",
+                  wrapper: "before:border-[var(--text-main)]/[0.2]"
+                }}
+              >
+                Ghi nhớ
               </Checkbox>
-              <Link href="#" size="sm" className="text-slate-500 hover:text-slate-800 font-semibold transition-colors">
+              <Link href="#" size="sm" className="text-[var(--text-main)] opacity-30 hover:opacity-100 font-black uppercase text-[10px] tracking-wider transition-all underline underline-offset-4">
                 Quên mật khẩu?
               </Link>
             </div>
 
+            {/* Submit Button: Đảo màu (Trắng trên nền Đen) y hệt UI Home */}
             <Button
               type="submit"
-              isLoading={loading} // loading lấy trực tiếp từ hook
-              className="w-full bg-slate-800 text-white font-black h-12 shadow-lg shadow-slate-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all mt-2"
+              isLoading={loading}
+              className="btn-tempest btn-tempest-lg"
               radius="full"
-              endContent={!loading && <LogIn size={18} />}
+              endContent={!loading && <LogIn size={22} strokeWidth={3} />}
             >
               VÀO HỆ THỐNG
             </Button>
           </form>
 
-          <p className="text-center text-slate-500 text-sm mt-2">
-            Chưa có tài khoản?{" "}
-            <Link href="/signup" size="sm" className="font-bold text-slate-800 underline">
+          {/* Footer */}
+          <div className="text-center mt-2 flex flex-col gap-2">
+            <p className="text-[var(--text-main)] opacity-30 text-[10px] font-black uppercase tracking-widest">
+              Chưa có tài khoản chiến binh?
+            </p>
+            <Link href="/signup" className="mx-auto font-black text-[var(--text-main)] text-sm uppercase italic underline underline-offset-8 decoration-2 hover:opacity-60 transition-opacity">
               Đăng ký ngay
             </Link>
-          </p>
+          </div>
 
         </CardBody>
       </Card>

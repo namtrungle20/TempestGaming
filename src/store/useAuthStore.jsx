@@ -33,6 +33,7 @@ export const useAuthStore = create((set) => ({
             // 1. Gọi login (Kết quả trả về là { success, data, message })
             const result = await login({
                 email: loginKey,
+                sdt: loginKey,
                 password: password
             });
 

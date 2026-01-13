@@ -6,68 +6,121 @@
 
 @layer base {
   :root {
-    /* Ép các biến nền về trong suốt để luôn thấy đường chân trời */
-    --background: transparent;
-    --background-secondary: transparent;
-    --foreground: 215 28% 27%;
-    /* slate 700 */
+    /* Trắng ngà vàng nhạt (Ivory) đổ ngược lên Trắng tinh */
+    --background: 48 30% 98%;
+    --foreground: 222 47% 11%;
 
-    /* Card nên có nền trắng mờ (Glassmorphism) để nổi trên nền Slate */
-    --card: 0 0% 100% / 0.7;
-    --card-foreground: 215 28% 27%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
 
     --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 258 89% 65%;
-    --radius: 0.5rem;
 
-    /* Các màu chức năng giữ nguyên */
-    --primary: 258 89% 65%;
-    --primary-foreground: 0 0% 100%;
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 0 0% 98%;
+    /* Biến Gradient riêng cho Tempest */
+    --gradient-background: linear-gradient(to top, #fdfcf0 0%, #ffffff 100%);
+    --text-main: #0f172a;
   }
 
-  /* Xóa bỏ toàn bộ màu nền xanh đậm trong chế độ Dark */
   .dark {
-    --background: transparent;
+    --background: 222 47% 4%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9% / 0.5;
-    /* Card tối mờ nếu ở chế độ dark */
-    --border: 217.2 32.6% 17.5%;
-  }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 40% 98%;
+
+    --border: 217 19% 27%;
+
+    /* Biến Gradient riêng cho Tempest Dark */
+    --gradient-background: linear-gradient(to top, #111827 0%, #030712 100%);
+    --text-main: #f8fafc;
   }
 
   body {
-    /* ĐÂY LÀ PHẦN QUAN TRỌNG NHẤT - GIỮ LẠI VÀ ÉP PHÊ */
-    background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%) !important;
-    background-attachment: fixed !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-
-    @apply min-h-screen text-slate-900 antialiased;
-  }
-
-  /* Đảm bảo các phần tử bao ngoài không có màu nền đè lên body */
-  #root,
-  .App {
-    background: transparent !important;
+    @apply antialiased overflow-x-hidden transition-colors duration-500;
   }
 }
 
-@layer utilities {
 
-  /* Class tiện ích để bạn dán vào bất cứ đâu muốn đổ bóng mạnh */
-  .shadow-tempest {
-    box-shadow: var(--shadow-main);
+@layer components {
+
+  /* --- LAYOUT SYSTEM --- */
+  .layout-tempest {
+    @apply min-h-screen transition-all duration-700;
+    background: var(--main-bg) fixed;
+    color: var(--text-main);
   }
 
-  .shadow-glow-slate {
-    box-shadow: var(--shadow-glow);
+  .nav-glass {
+    background-color: rgba(var(--nav-rgb), 0.6) !important;
+    @apply backdrop-blur-xl border-b border-[var(--border)] transition-all duration-500;
+  }
+
+  /* --- BUTTON SYSTEM (TEMPEST) --- */
+  .btn-tempest {
+    /* Ép màu bằng CSS thuần - Tailwind v4 ưu tiên cực cao */
+    background-color: var(--text-main) !important;
+    color: hsl(var(--background)) !important;
+    border: none !important;
+
+    /* Cấu trúc cơ bản */
+    @apply flex items-center justify-center gap-3 px-10 h-14 rounded-full font-[1000] uppercase italic transition-all duration-300 ease-in-out relative overflow-hidden tracking-tighter cursor-pointer;
+
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Hiệu ứng tương tác */
+  .btn-tempest:hover {
+    @apply scale-105;
+    letter-spacing: 0.1em !important;
+    filter: brightness(1.2) !important;
+    box-shadow: 0 0 30px -5px var(--text-main) !important;
+  }
+
+  .btn-tempest:active {
+    @apply scale-95;
+    filter: brightness(0.9) !important;
+  }
+
+  /* Định nghĩa size riêng biệt - KHÔNG dùng @apply .btn-tempest ở đây */
+  .btn-tempest-sm {
+    @apply h-12 text-sm px-6;
+  }
+
+  .btn-tempest-lg {
+    @apply h-16 text-lg px-12;
+  }
+
+  /* --- TYPOGRAPHY & ICONS --- */
+  .text-dynamic {
+    @apply bg-clip-text text-transparent bg-gradient-to-b;
+    background-image: linear-gradient(to bottom, var(--text-main) 60%, rgba(124, 58, 237, 0.5));
+  }
+
+  svg.lucide {
+    @apply transition-transform duration-300;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1));
+  }
+
+  /* --- UI ELEMENTS --- */
+  .theme-toggle-frame [data-heroui-switch-thumb] {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    @apply transition-all duration-500;
+  }
+
+  /* Sửa Switch Thumb theo màu text chính */
+  .group[data-selected=true] .bg-secondary {
+    background-color: var(--text-main) !important;
+  }
+
+  .shadow-tempest-dynamic {
+    /* Light Mode: Bóng đổ đen sâu, mịn */
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4),
+      0 18px 36px -18px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.5s ease;
+  }
+
+  .dark .shadow-tempest-dynamic {
+    /* Dark Mode: Bóng đổ màu trắng phát sáng (Glow) */
+    box-shadow: 0 0 50px -10px rgba(255, 255, 255, 0.15),
+      0 0 20px -5px rgba(255, 255, 255, 0.1);
   }
 }
