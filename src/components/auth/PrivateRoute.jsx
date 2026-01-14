@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from "@/store/useAuthStore";
 
-export const ProtectedRoute = ({ allowAdminOnly = false }) => {
+export const PrivateRoute = ({ allowAdminOnly = false }) => {
   const { user, accessToken } = useAuthStore();
 
   // 1. Nếu chưa đăng nhập -> Luôn đẩy về login

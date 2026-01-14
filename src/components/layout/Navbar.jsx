@@ -16,9 +16,13 @@ import {
 import { Search, User, ShoppingCart } from "lucide-react";
 import { ThemeToggle } from "../layout/ThemeToggle";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hook/useAuth";
 
 export default function AppNavbar() {
   const navigate = useNavigate();
+  const { handleLogout } = useAuth();
+  const rawData = localStorage.getItem('nguoidung');
+  const userData = rawData && rawData !== "undefined" ? JSON.parse(rawData) : null;
 
   return (
     <Navbar
@@ -74,11 +78,17 @@ export default function AppNavbar() {
           <DropdownMenu
             aria-label="Profile Actions"
             variant="flat"
-            onAction={(key) => navigate(key)} // Tự động chuyển trang theo key
+            onAction={(key) => {
+              if (key === "/logout") {
+                handleLogout(); // Gọi hàm logout riêng
+              } else {
+                navigate(key); // Chuyển trang bình thường (profile, orders...)
+              }
+            }} // Tự động chuyển trang theo key
           >
-            <DropdownItem key="/profile" className="h-14 gap-2">
+            <DropdownItem key="/login" className="h-14 gap-2">
               <p className="font-semibold">Đang đăng nhập bằng</p>
-              <p className="font-semibold text-primary">user@tempest.com</p>
+              <p className="font-semibold text-primary">{userData?.email.split('@')[0]}</p>
             </DropdownItem>
             <DropdownItem key="/profile">Hồ sơ cá nhân</DropdownItem>
             <DropdownItem key="/orders">Đơn hàng của tôi</DropdownItem>

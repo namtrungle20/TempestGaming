@@ -7,7 +7,7 @@ import HomePage from "./page/HomePage.jsx"
 import NotFound from "./page/NotFound.jsx";
 import { Toaster } from "sonner";
 
-import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
+import { PrivateRoute } from "././components/auth/PrivateRoute.jsx"
 import { PublicRoute } from "./components/auth/PublicRoute.jsx";
 import AppNavbar from "./components/layout/Navbar.jsx";
 
@@ -36,7 +36,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
             </Route>
 
-            <Route element={<ProtectedRoute allowAdminOnly={true} />}>
+            <Route element={<PrivateRoute allowAdminOnly={true} />}>
               {/* Bất cứ gì nằm trong này đều bị chặn nếu role !== admin */}
               <Route path="/admin/*" element={<AdminPage />} />
             </Route>

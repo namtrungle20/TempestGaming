@@ -44,10 +44,25 @@ export const dataProvider = {
     },
 
     delete: async (resource, params) => {
+        // 1. Lấy URL từ config: '/nguoidung/delete'
         const config = adminConfig[resource];
-        const url = config?.delete || `/${resource}/${params.id}`;
+        const url = config?.delete || `/${resource}/delete`;
 
-        await axiosInstance.delete(url);
-        return { data: params.previousData };
+        console.log("🚀 Gọi API xóa tại:", url, "với ID:", params.id);
+
+        try {
+            // Chỉ await mà không gán vào biến 'response'
+            await axiosInstance.delete(url, {
+                data: { id: params.id }
+            });
+
+            // React-admin cần ID của bản ghi vừa xóa để cập nhật giao diện
+            return { data: { id: params.id } };
+        } catch (error) {
+            // Log chi tiết lỗi từ Server (Lỗi 500, 404...)
+            const errorMsg = error.response?.data?.error || error.message;
+            console.error("❌ Lỗi xóa từ Server:", errorMsg);
+            throw new Error(errorMsg);
+        }
     },
 };

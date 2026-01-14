@@ -33,7 +33,7 @@ export const useAuth = () => {
                 // Kiểm tra dữ liệu an toàn trước khi vào Model
                 // const dataToMap = result.data?.user || result.data;
                 const currentUser = new User(result.data);
-                
+
                 console.log("Quyền người dùng:", currentUser.vaitro); // Debug xem vaitro là gì
 
                 if (currentUser.isAdmin()) {
@@ -52,5 +52,13 @@ export const useAuth = () => {
         }
     };
 
-    return { formData, loading, handleChange, handleSignIn };
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('nguoidung');
+
+        navigate('/login');
+    }
+
+    return { formData, loading, handleChange, handleSignIn, handleLogout };
+
 };

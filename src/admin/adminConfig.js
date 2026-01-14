@@ -3,7 +3,7 @@ export const adminConfig = {
         list: '/nguoidung/danh-sach',
         detail: '/nguoidung/chi-tiet',
         update: '/nguoidung/update',
-        delete: '/nguoidung/xoa' // Ví dụ nếu có API xóa riêng
+        delete: '/nguoidung/delete' // Ví dụ nếu có API xóa riêng
     },
 };
 
