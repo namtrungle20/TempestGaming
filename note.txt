@@ -8,44 +8,31 @@ Một số snippet hay dùng
 
 *cấu trúc thư mục:
 tempest-gaming/
-├── src/
-│   ├── api/                # Quản lý kết nối API (Axios)
-│   │   ├── axiosInstance.js# Cấu hình chung (BaseURL, Interceptors)
-│   │   ├── authApi.js      # Gọi API Login/Register
-│   │   └── staffApi.js     # Gọi API CRUD nhân viên
-│   │
-│   ├── components/         # Các thành phần giao diện nhỏ
-│   │   ├── shop/           # UI dành cho khách hàng (Dùng HeroUI)
-│   │   │   ├── Navbar.jsx
-│   │   │   └── ProductCard.jsx
-│   │   ├── admin/          # UI dành cho quản trị (Dùng Shadcn)
-│   │   │   ├── Sidebar.jsx
-│   │   │   └── StaffTable.jsx
-│   │   └── ui/             # "Đại bản doanh" của Shadcn/ui (Sinh ra từ npx)
-│   │       ├── button.jsx
-│   │       ├── table.jsx
-│   │       └── ...
-│   │
-│   ├── layouts/            # Khung bao quát (Wrapper) cho từng khu vực
-│   │   ├── UserLayout.jsx  # Bọc trang khách (có Navbar/Footer)
-│   │   └── AdminLayout.jsx # Bọc trang quản lý (có Sidebar chuyên dụng)
-│   │
-│   ├── pages/              # Các trang chính (Tập hợp từ các component)
-│   │   ├── auth/           # Đăng nhập & Đăng ký
-│   │   │   ├── Login.jsx
-│   │   │   └── Register.jsx
-│   │   ├── shop/           # Các trang bán hàng (Home, Detail, Cart)
-│   │   │   └── HomePage.jsx
-│   │   └── admin/          # Các trang quản trị (Dashboard, Staff, Orders)
-│   │       ├── Dashboard.jsx
-│   │       └── StaffManagement.jsx
-│   │
-│   ├── hooks/              # Các Logic tùy chỉnh (useAuth, useLocalStorage)
-│   ├── store/              # Quản lý trạng thái toàn cục (Zustand/Redux)
-│   ├── lib/                # Cấu hình thư viện ngoài (utils.js cho Shadcn)
-│   ├── App.jsx             # Cấu hình chính cho Routing (React Router)
-│   └── main.jsx            # Điểm khởi đầu của ứng dụng (Bọc Provider)
+src/
+├── libs/           # [CẤU HÌNH GỐC] 
+│                   # Chứa axiosInstance, thiết lập interceptors (gắn token),
+│                   # và các hàm helper thuần túy (utils.js).
 │
-├── public/                 # Tài nguyên tĩnh (Ảnh 3D, Logo, Video)
-├── tailwind.config.js      # Cấu hình "linh hồn" cho Shadcn & HeroUI
-└── package.json            # Quản lý các thư viện cài đặt
+├── services/       # [XỬ LÝ NGHIỆP VỤ - BUSINESS LOGIC]
+│                   # Nơi thực hiện các cuộc gọi API cụ thể. 
+│                   # Ví dụ: authService.js (xử lý login/logout), 
+│                   # staffService.js (lấy danh sách, thêm/xóa nhân viên).
+│                   # UI chỉ gọi hàm từ đây, không gọi trực tiếp Axios.
+│
+├── store/          # [KHO DỮ LIỆU TẠM THỜI]
+│                   # Sử dụng Zustand để lưu trạng thái phiên làm việc (session).
+│                   # Giúp các Component ở xa nhau vẫn dùng chung được dữ liệu.
+│
+├── page/           # [MÀN HÌNH CHÍNH]
+│   ├── Auth/       # Trang SignIn, SignUp.
+│   ├── Admin/      # Các trang quản trị (Dashboard, Staff Management).
+│   └── Main/       # Trang chủ cho khách hàng.
+│
+├── layouts/        # [KHUNG BAO QUÁT]
+│                   # AdminLayout (có Sidebar/Header admin) và UserLayout.
+│
+├── components/     # [LINH KIỆN TÁI SỬ DỤNG]
+│   └── ui/         # Thư viện Shadcn đã cài đặt (Button, Card, Table...).
+│
+├── App.jsx         # [TỔNG TÀI ĐIỀU PHỐI] Quản lý Route và Phân quyền.
+└── index.css       # [STYLE TOÀN CỤC] Background đường chân trời & biến CSS.
