@@ -1,9 +1,12 @@
-import UserList from './users/UserList';
-import UserEdit from './users/UserEdit';
+import user from './users';
+import product from './products';
 
-export { UserList, UserEdit };
+// Export lẻ nếu cần dùng component riêng biệt
+export * from './users';
+export * from './products';
 
-export default {
-    list: UserList,
-    edit: UserEdit,
-};
+// Export mặc định là một object chứa tất cả các resource để AdminPage loop qua
+export const resources = [
+    user,
+    product
+];

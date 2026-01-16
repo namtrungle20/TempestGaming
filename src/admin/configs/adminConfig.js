@@ -5,6 +5,9 @@ export const adminConfig = {
         update: '/nguoidung/update',
         delete: '/nguoidung/delete' // Ví dụ nếu có API xóa riêng
     },
+    sanpham: {
+        root: '/sanpham'
+    }
 };
 
 export const ADMIN_SETTINGS = {
