@@ -27,6 +27,13 @@ export const authProvider = {
         if (accessToken && user?.isAdmin()) {
             return Promise.resolve();
         }
+
+        const storageToken = localStorage.getItem('accessToken');
+        const storageRole = localStorage.getItem('vaitro');
+
+        if (storageToken && (storageRole === '1')) {
+            return Promise.resolve();
+        }
         // Nếu không, đá ra trang login ngoài
         return Promise.reject({ redirectTo: '/login' });
     },
@@ -43,10 +50,8 @@ export const authProvider = {
 
     // 4. Khi nhấn nút Logout trong trang Admin
     logout: () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('nguoidung');
-        localStorage.removeItem('vaitro');
+        useAuthStore.getState().logout(); // Giả sử store của bạn có hàm logout để reset state
+        localStorage.clear(); // Xóa sạch cho an toàn
         return Promise.resolve();
     },
 

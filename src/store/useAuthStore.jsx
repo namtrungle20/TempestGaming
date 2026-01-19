@@ -1,21 +1,14 @@
 import { create } from "zustand";
 import User from "@/models/User";
-import { login } from "@/libs/auth";
+import { authService } from "@/services/authService";
 
 
 const getInitialUser = () => {
     const data = localStorage.getItem("nguoidung");
-
-    // Nếu ngăn kéo trống (null) hoặc bị kẹt chữ "undefined"
-    if (!data || data === "undefined") {
-        return null;
-    }
-
+    if (!data || data === "undefined") return null;
     try {
-        // Chỉ parse khi chắc chắn data là một chuỗi JSON hợp lệ
         return new User(JSON.parse(data));
     } catch {
-        console.error("Dữ liệu lưu trữ bị lỗi, đang xóa...");
         localStorage.removeItem("nguoidung");
         return null;
     }
@@ -27,47 +20,61 @@ export const useAuthStore = create((set) => ({
     loading: false,
 
     signIn: async (loginKey, password) => {
+        set({ loading: true });
         try {
-            set({ loading: true });
+            // 1. Gọi Service
+            const responseData = await authService.login(loginKey, password);
 
-            // 1. Gọi login (Kết quả trả về là { success, data, message })
-            const result = await login({
-                email: loginKey,
-                sdt: loginKey,
-                password: password
-            });
+            // 2. Phân tích dữ liệu trả về (Debug kỹ cấu trúc JSON backend trả về nhé)
+            // Giả sử backend trả về: { message: "...", data: { accessToken: "...", nguoidung: {...} } }
+            const { accessToken, nguoidung } = responseData.data || {};
 
-            if (result.success) {
-                // Dựa trên JSON bạn gửi, cấu trúc là result.data.data.nguoidung
-                const userRawData = result.data.data.nguoidung;
-                const token = result.data.data.accessToken;
-
-                const cleanUser = new User(userRawData);
-
-                localStorage.setItem("accessToken", token);
-                localStorage.setItem("nguoidung", JSON.stringify(userRawData));
-
-                set({
-                    accessToken: token,
-                    user: cleanUser,
-                    loading: false
-                });
-
-                // Trả về userRawData để useAuth.js dùng làm currentUser
-                return { success: true, data: userRawData };
+            if (!accessToken || !nguoidung) {
+                throw new Error("Dữ liệu trả về từ server không hợp lệ");
             }
 
-            set({ loading: false });
-            return result;
+            // 3. Lưu vào LocalStorage
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("nguoidung", JSON.stringify(nguoidung));
+
+            // Lưu refreshToken nếu có
+            if (responseData.data.refreshToken) {
+                localStorage.setItem("refreshToken", responseData.data.refreshToken);
+            }
+
+            // 4. Cập nhật State
+            const cleanUser = new User(nguoidung);
+            set({
+                accessToken: accessToken,
+                user: cleanUser,
+                loading: false
+            });
+
+            return { success: true, data: nguoidung };
 
         } catch (error) {
             set({ loading: false });
-            const serverMessage = error.response?.data?.message || "Lỗi kết nối hệ thống";
+            // Lấy message lỗi chuẩn từ axios
+            const serverMessage = error.response?.data?.message || error.message || "Lỗi đăng nhập";
             console.error("Lỗi Store:", serverMessage);
             return {
                 success: false,
-                message: serverMessage // Bây giờ message sẽ là "Tài khoản của bạn đã bị khóa..."
+                message: serverMessage
             };
         }
+    },
+
+    logout: () => {
+        // Gọi API logout (không await để tránh chặn UI)
+        authService.logout().catch(err => console.warn("Logout error", err));
+
+        // Xóa sạch Storage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("nguoidung");
+        localStorage.removeItem("vaitro");
+
+        // Reset State
+        set({ accessToken: null, user: null });
     }
 }));

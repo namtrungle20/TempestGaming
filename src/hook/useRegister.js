@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '@/libs/auth';
+import { authService } from "@/services/authService";
 import { toast } from 'sonner';
 
 export const useRegister = () => {
@@ -37,7 +37,7 @@ export const useRegister = () => {
         }
 
         setLoading(true);
-        const result = await register(formData);
+        const result = await authService.register(formData);
 
         if (result.success) {
             // 2. Lưu đúng key 'accessToken' để PublicRoute của bạn nhận diện được

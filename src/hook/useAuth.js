@@ -7,6 +7,7 @@ import User from '@/models/User';
 export const useAuth = () => {
     const navigate = useNavigate();
     const signIn = useAuthStore((state) => state.signIn);
+    const logout = useAuthStore((state) => state.logout);
     const loading = useAuthStore((state) => state.loading);
 
     const [formData, setFormData] = useState({
@@ -28,36 +29,27 @@ export const useAuth = () => {
         const result = await signIn(formData.loginKey, formData.password);
 
         if (result.success) {
-            toast.success("Chào mừng bạn quay trở lại!");
-            try {
-                // Kiểm tra dữ liệu an toàn trước khi vào Model
-                // const dataToMap = result.data?.user || result.data;
-                const currentUser = new User(result.data);
+            toast.success("Đăng nhập thành công!");
 
-                console.log("Quyền người dùng:", currentUser.vaitro); // Debug xem vaitro là gì
+            // Map lại User Model để check quyền
+            const currentUser = new User(result.data);
 
-                if (currentUser.isAdmin()) {
-                    console.log("Đang chuyển hướng sang /admin...");
-                    navigate('/admin', { replace: true });
-                } else {
-                    console.log("Đang chuyển hướng sang /...");
-                    navigate('/', { replace: true });
-                }
-            } catch (error) {
-                console.error("Lỗi khi xử lý dữ liệu User:", error);
-                toast.error("Lỗi dữ liệu hệ thống!");
+            if (currentUser.isAdmin()) {
+                navigate('/admin', { replace: true });
+            } else {
+                navigate('/', { replace: true });
             }
         } else {
-            toast.error(result?.message || "Sai tài khoản hoặc mật khẩu");
+            // Hiển thị lỗi từ backend (vd: Tài khoản bị khóa)
+            toast.error(result.message);
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('nguoidung');
-
-        navigate('/login');
-    }
+        logout(); // Gọi action logout của Store
+        toast.info("Đã đăng xuất");
+        navigate('/login', { replace: true });
+    };
 
     return { formData, loading, handleChange, handleSignIn, handleLogout };
 

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import SignIn from "./page/Auth/SignInPage.jsx";
-import SignUp from "./page/Auth/SignUpPage.jsx";
+import SignIn from "./page/auth/SignInPage.jsx";
+import SignUp from "./page/auth/SignUpPage.jsx";
 import AdminPage from "./page/AdminPage.jsx";
 import HomePage from "./page/HomePage.jsx"
 import NotFound from "./page/NotFound.jsx";
@@ -9,7 +9,8 @@ import { Toaster } from "sonner";
 
 import { PrivateRoute } from "././components/auth/PrivateRoute.jsx"
 import { PublicRoute } from "./components/auth/PublicRoute.jsx";
-import AppNavbar from "./components/layout/Navbar.jsx";
+import AppNavbar from "./components/layout/NavbarHeader.jsx";
+import UserLayout from "./components/layout/UserLayout.jsx";
 
 const queryClient = new QueryClient();
 
@@ -27,12 +28,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
             </Route>
 
-            <Route element={
-              <>
-                <AppNavbar />
-                <Outlet />
-              </>
-            }>
+            <Route element={<UserLayout />}>
               <Route path="/" element={<HomePage />} />
             </Route>
 

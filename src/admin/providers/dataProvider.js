@@ -1,4 +1,4 @@
-import axiosInstance from "@/libs/auth"; // Import cái axios bạn đã cài đặt token
+import axiosInstance from "@/libs/axiosInstance"; // Import cái axios bạn đã cài đặt token
 import { adminConfig } from "../configs/adminConfig";
 import { mapResourceData } from "../utils/adminUtils";
 import { fileProvider } from "./fileProvider";

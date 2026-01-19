@@ -7,35 +7,71 @@ Một số snippet hay dùng
 
 
 *cấu trúc thư mục:
-tempest-gaming/
-src/
-├── libs/           # [CẤU HÌNH GỐC] 
-│                   # Chứa axiosInstance, thiết lập interceptors (gắn token),
-│                   # và các hàm helper thuần túy (utils.js).
-│
-├── services/       # [XỬ LÝ NGHIỆP VỤ - BUSINESS LOGIC]
-│                   # Nơi thực hiện các cuộc gọi API cụ thể. 
-│                   # Ví dụ: authService.js (xử lý login/logout), 
-│                   # staffService.js (lấy danh sách, thêm/xóa nhân viên).
-│                   # UI chỉ gọi hàm từ đây, không gọi trực tiếp Axios.
-│
-├── store/          # [KHO DỮ LIỆU TẠM THỜI]
-│                   # Sử dụng Zustand để lưu trạng thái phiên làm việc (session).
-│                   # Giúp các Component ở xa nhau vẫn dùng chung được dữ liệu.
-│
-├── page/           # [MÀN HÌNH CHÍNH]
-│   ├── Auth/       # Trang SignIn, SignUp.
-│   ├── Admin/      # Các trang quản trị (Dashboard, Staff Management).
-│   └── Main/       # Trang chủ cho khách hàng.
-│
-├── layouts/        # [KHUNG BAO QUÁT]
-│                   # AdminLayout (có Sidebar/Header admin) và UserLayout.
-│
-├── components/     # [LINH KIỆN TÁI SỬ DỤNG]
-│   └── ui/         # Thư viện Shadcn đã cài đặt (Button, Card, Table...).
-│
-├── App.jsx         # [TỔNG TÀI ĐIỀU PHỐI] Quản lý Route và Phân quyền.
-└── index.css       # [STYLE TOÀN CỤC] Background đường chân trời & biến CSS.
+E:\DEV\REACT\TEMPESTGAMING\SRC
+|   App.jsx
+|   index.css
+|   main.jsx
+|
++---admin                  (Giữ nguyên, cấu trúc React-Admin tốt rồi)
+|   +---configs
+|   +---providers
+|   +---resources
+|   \---utils
+|
++---components
+|   +---auth               (HOC bảo vệ route)
+|   |       PrivateRoute.jsx
+|   |       PublicRoute.jsx
+|   |
+|   +---common             (✨ THÊM: Các component dùng chung cả App)
+|   |       ProductCard.jsx
+|   |       LoadingSpinner.jsx
+|   |
+|   +---layout
+|   |       UserLayout.jsx
+|   |       Navbar.jsx     (♻️ Đổi tên từ NavbarHeader, bỏ folder menu)
+|   |       Footer.jsx     (✨ THÊM: Chân trang)
+|   |       ThemeToggle.jsx
+|   |
+|   \---ui                 (Giữ nguyên Shadcn/HeroUI)
+|           button.jsx
+|           ...
+|
++---hooks                  (♻️ Đổi tên từ 'hook')
+|       useAuth.js
+|       useCategories.js   (✨ THÊM: Logic gọi danh mục)
+|       useCart.js         (✨ THÊM: Logic giỏ hàng)
+|
++---libs                   (Cấu hình thư viện thứ 3)
+|       axiosInstance.js
+|       queryClient.js
+|       utils.js           (Chứa hàm format tiền, ngày tháng chung)
+|
++---models                 (Class định nghĩa dữ liệu)
+|       Product.js
+|       User.js
+|       Category.js        (✨ THÊM)
+|
++---pages                  (♻️ Đổi tên từ 'page')
+|   |   HomePage.jsx
+|   |   NotFound.jsx
+|   |   AdminPage.jsx      (Container cho phần Admin)
+|   |
+|   +---auth               (Chữ thường)
+|   |       SignInPage.jsx
+|   |       SignUpPage.jsx
+|   |
+|   \---product            (✨ THÊM: Trang chi tiết sản phẩm)
+|           ProductDetailPage.jsx
+|
++---services               (✨ QUAN TRỌNG: Gọi API tại đây)
+|       authService.js
+|       categoryService.js
+|       productService.js
+|
+\---store                  (Quản lý State toàn cục)
+        useAuthStore.jsx
+        useCartStore.jsx   (✨ THÊM: State giỏ hàng)
 
 
 Mô Tả Nghiệp Vụ - TempestGaming System

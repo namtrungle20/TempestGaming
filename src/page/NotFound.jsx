@@ -3,6 +3,7 @@ import { Button, Card, CardBody } from "@heroui/react";
 import { Home, MoveLeft } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
+
 export default function NotFound() {
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ export default function NotFound() {
           <div className="relative mb-8 group">
             {/* Ảnh 404 với hiệu ứng phát sáng đồng bộ */}
             <img
-              src="404.png"
+              src="/404.png"
               className='w-64 md:w-80 drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] 
                    dark:drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] 
                    animate-appearance-in transition-all duration-700 

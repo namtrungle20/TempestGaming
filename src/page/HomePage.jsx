@@ -1,4 +1,4 @@
-import AppNavbar from '@/components/layout/Navbar';
+import AppNavbar from '@/components/layout/NavbarHeader';
 import React from 'react'
 import { Button } from "@heroui/react";
 

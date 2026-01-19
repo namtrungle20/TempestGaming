@@ -1,4 +1,4 @@
-import axiosInstance from "@/libs/auth";
+import axiosInstance from "@/libs/axiosInstance";
 
 export const fileProvider = {
     uploadImage: async (file) => {
