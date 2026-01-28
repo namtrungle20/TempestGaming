@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -9,15 +9,20 @@ import {
   Button,
   Dropdown,
   Input,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
   DropdownTrigger,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "@heroui/react";
-import { Search, User, ShoppingCart, LogOut, Settings, ClipboardList, ChevronDown, LayoutGrid } from "lucide-react";
+import { Search, User, ShoppingCart, LogOut, Settings, ClipboardList, ChevronDown, LayoutGrid, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hook/useAuth";
 import { ThemeToggle } from './ThemeToggle';
 import { useCategories } from "@/hook/useCategories";
+import { useBrands } from "@/hook/useBrand";
+import { RenderImage } from "@/components/RenderImage";
 
 
 
@@ -30,6 +35,16 @@ export default function AppNavbar() {
 
   // State lưu danh mục
   const { categories } = useCategories();
+  const { brands } = useBrands();
+  const [activeBrandId, setActiveBrandId] = useState(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  // Effect để chọn brand đầu tiên khi mở menu
+  useEffect(() => {
+    if (isPopoverOpen && brands.length > 0 && !activeBrandId) {
+      setActiveBrandId(brands[0].id);
+    }
+  }, [isPopoverOpen, brands, activeBrandId]);
 
   // Gọi API lấy danh mục ngay trong Navbar
 
@@ -49,61 +64,99 @@ export default function AppNavbar() {
       </NavbarBrand>
 
       <NavbarContent justify="start" className="hidden sm:flex gap-4 ml-4">
-
-        <Dropdown>
-          <NavbarItem>
-            <DropdownTrigger>
+        <NavbarItem
+          onMouseEnter={() => setIsPopoverOpen(true)}
+          onMouseLeave={() => {
+            setIsPopoverOpen(false);
+            setActiveBrandId(null);
+          }}
+        >
+          <Popover
+            placement="bottom-start"
+            offset={15}
+            isOpen={isPopoverOpen}
+            showArrow
+            classNames={{
+              content: "p-0 border border-white/10 bg-black/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl",
+            }}
+          >
+            {/* QUAN TRỌNG: PopoverTrigger để menu dính đúng vị trí nút bấm */}
+            <PopoverTrigger>
               <Button
-                disableRipple
-                className="p-0 bg-transparent data-[hover=true]:bg-transparent text-[var(--text-main)] font-bold text-sm gap-2 uppercase tracking-wide opacity-80 hover:opacity-100"
-                endContent={<ChevronDown size={16} />}
                 variant="light"
-                radius="sm"
+                className="font-bold text-sm uppercase gap-2 text-[var(--text-main)] opacity-80 hover:opacity-100"
+                endContent={<ChevronDown size={16} className={isPopoverOpen ? "rotate-180 transition-transform" : ""} />}
               >
                 <LayoutGrid size={18} /> Danh mục
               </Button>
-            </DropdownTrigger>
-          </NavbarItem>
+            </PopoverTrigger>
 
-          <DropdownMenu
-            aria-label="Danh mục sản phẩm"
-            className="w-[240px] max-h-[400px] overflow-y-auto bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--border)] shadow-tempest-dynamic rounded-2xl p-2"
-            itemClasses={{
-              base: [
-                "gap-3 py-2.5 px-3 rounded-xl transition-all duration-300",
-                "data-[hover=true]:bg-[var(--text-main)]/5", // Hover: dùng màu text chính độ mờ 5% (hợp cả sáng/tối)
-                "data-[hover=true]:scale-[1.02]", // Hiệu ứng phóng to nhẹ khi hover chuẩn Tempest
-              ].join(" "),
-              title: "text-sm font-bold uppercase tracking-tight text-[var(--text-main)]", // Font đậm, in hoa
-            }}
-          >
-            {/* Lặp qua danh sách categories lấy từ API */}
-            {categories.map((cat) => (
-              <DropdownItem
-                key={cat.id} // ✅ Dùng .id (do Model đã map từ loai_id sang)
-                href={cat.getLink ? cat.getLink() : `/category/${cat.id}`}
-                startContent={
-                  <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-[var(--text-main)]/5 border border-[var(--text-main)]/10 p-1.5 shadow-sm">
-                    <img
-                      src={cat.image} // ✅ Dùng .image chuẩn
-                      alt={cat.name}  // ✅ Dùng .name chuẩn
-                      className="w-full h-full object-contain dark:invert"
-                    />
+            <PopoverContent>
+              {/* Container Mega Menu rộng 600px */}
+              <div className="w-[600px] p-6 flex flex-col gap-6">
+
+                {/* PHẦN 1: GRID THƯƠNG HIỆU (Ngang 4 cái, tự xuống dòng) */}
+                <div className="grid grid-cols-4 gap-4">
+                  {brands.map((bra) => (
+                    <div
+                      key={bra.id}
+                      onMouseEnter={() => setActiveBrandId(bra.id)}
+                      className={`flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer transition-all duration-300 ${activeBrandId === bra.id
+                        ? "bg-primary/10 text-primary scale-110 shadow-lg"
+                        : "hover:bg-white/5 text-white/50"
+                        }`}
+                      onClick={() => navigate(bra.link)}
+                    >
+                      <RenderImage
+                        src={bra.image}
+                        alt={bra.name}
+                        className={`w-6 h-6 object-contain ${activeBrandId === bra.id ? "" : "dark:invert"}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* PHẦN 2: MENU DỌC THỂ LOẠI (Giống nShop) */}
+                {activeBrandId && (
+                  <div className="flex flex-col animate-in fade-in slide-in-from-top-4 duration-500 pt-4 border-t border-white/5">
+                    <p className="px-4 pb-2 text-[10px] font-black uppercase text-white/20 italic">
+                      Thể loại {brands.find(b => b.id === activeBrandId)?.name}
+                    </p>
+
+                    {/* Khung menu dọc trắng/mờ giống hình bạn gửi */}
+                    <div className="bg-white/5 rounded-2xl p-1.5 flex flex-col gap-0.5">
+                      {categories
+                        .filter(cat => cat.thuonghieu_id === activeBrandId)
+                        .map((subCat, index) => (
+                          <Button
+                            key={subCat.id}
+                            variant="light"
+                            // Mục đầu tiên màu đỏ (highlight) giống PS5 trong nShop
+                            className={`justify-start h-11 px-4 font-bold uppercase text-xs italic rounded-xl hover:bg-white/10 transition-all ${index === 0 ? "text-red-500" : "text-white/80"
+                              }`}
+                            onPress={() => {
+                              navigate(subCat.link);
+                              setIsPopoverOpen(false);
+                            }}
+                            startContent={<ChevronRight size={14} className="opacity-30" />}
+                          >
+                            {subCat.name}
+                          </Button>
+                        ))}
+
+                      {/* Fallback khi chưa có thể loại */}
+                      {categories.filter(cat => cat.thuonghieu_id === activeBrandId).length === 0 && (
+                        <div className="p-8 text-center text-[10px] font-black uppercase opacity-20 italic">
+                          Chưa có danh mục cụ thể
+                        </div>
+                      )}
+                    </div>
                   </div>
-                }
-              >
-                <span>{cat.name}</span>
-              </DropdownItem>
-            ))}
-
-            {/* Nếu API chưa có dữ liệu hoặc đang load thì hiện cái này cho đỡ trống */}
-            {categories.length === 0 && (
-              <DropdownItem key="loading" isReadOnly>
-                Đang tải danh mục...
-              </DropdownItem>
-            )}
-          </DropdownMenu>
-        </Dropdown>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </NavbarItem>
 
         {/* Các menu text khác nếu có */}
         <NavbarItem>
@@ -181,6 +234,6 @@ export default function AppNavbar() {
           )}
         </NavbarItem>
       </NavbarContent>
-    </Navbar>
+    </Navbar >
   );
 }

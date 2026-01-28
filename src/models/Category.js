@@ -14,7 +14,7 @@ export default class Category {
     }
 
     // Helper: Tạo link chuẩn cho từng danh mục
-    getLink() {
+    get link() {
         return `/loaisanpham/${this.id}`;
     }
 }
