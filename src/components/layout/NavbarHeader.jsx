@@ -16,7 +16,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Search, User, ShoppingCart, LogOut, Settings, ClipboardList, ChevronDown, LayoutGrid, ChevronRight } from "lucide-react";
+import { Search, User, ShoppingCart, LogOut, Settings, ClipboardList, ChevronDown, LayoutGrid, ChevronRight, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hook/useAuth";
 import { ThemeToggle } from './ThemeToggle';
@@ -41,7 +41,7 @@ export default function AppNavbar() {
 
   // Effect để chọn brand đầu tiên khi mở menu
   useEffect(() => {
-    if (isPopoverOpen && brands.length > 0 && !activeBrandId) {
+    if (brands.length > 0 && !activeBrandId) {
       setActiveBrandId(brands[0].id);
     }
   }, [isPopoverOpen, brands, activeBrandId]);
@@ -54,137 +54,109 @@ export default function AppNavbar() {
       maxWidth="xl"
       className="nav-glass h-20 fixed top-0"
       classNames={{
-        wrapper: "bg-transparent",
+        wrapper: "bg-transparent px-4 sm:px-6",
+        item: "data-[active=true]:text-primary",
       }}
     >
-      <NavbarBrand>
-        <p className="font-black text-[var(--text-main)] italic uppercase tracking-tighter text-xl">
+      <NavbarBrand className="cursor-pointer" onClick={() => navigate('/')}>
+        <p className="font-[1000] text-[var(--text-main)] italic uppercase tracking-tighter text-2xl">
           Tempest
         </p>
       </NavbarBrand>
 
-      <NavbarContent justify="start" className="hidden sm:flex gap-4 ml-4">
-        <NavbarItem
-          onMouseEnter={() => setIsPopoverOpen(true)}
-          onMouseLeave={() => {
-            setIsPopoverOpen(false);
-            setActiveBrandId(null);
-          }}
-        >
+      {/* --- MEGA MENU --- */}
+      <NavbarContent justify="start" className="hidden sm:flex gap-6 ml-6">
+        <NavbarItem onMouseEnter={() => setIsPopoverOpen(true)} onMouseLeave={() => setIsPopoverOpen(false)}>
           <Popover
             placement="bottom-start"
-            offset={15}
+            offset={20}
             isOpen={isPopoverOpen}
-            showArrow
+            onOpenChange={(open) => setIsPopoverOpen(open)}
             classNames={{
-              content: "p-0 border border-white/10 bg-black/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl",
+              content: "p-0 bg-transparent border-none shadow-none overflow-visible"
             }}
           >
-            {/* QUAN TRỌNG: PopoverTrigger để menu dính đúng vị trí nút bấm */}
             <PopoverTrigger>
               <Button
-                variant="light"
-                className="font-bold text-sm uppercase gap-2 text-[var(--text-main)] opacity-80 hover:opacity-100"
-                endContent={<ChevronDown size={16} className={isPopoverOpen ? "rotate-180 transition-transform" : ""} />}
+                disableRipple
+                className="bg-transparent font-bold text-sm uppercase gap-2 text-[var(--text-main)] opacity-70 hover:opacity-100 p-0"
+                endContent={<ChevronDown size={14} className={isPopoverOpen ? "rotate-180 transition-transform" : ""} />}
               >
                 <LayoutGrid size={18} /> Danh mục
               </Button>
             </PopoverTrigger>
 
             <PopoverContent>
-              {/* Container Mega Menu rộng 600px */}
-              <div className="w-[600px] p-6 flex flex-col gap-6">
+              {/* Class .menu-dropdown sẽ chịu trách nhiệm tạo khung kính */}
+              <div className="menu-dropdown">
+                {brands.map((brand) => (
+                  <div
+                    key={brand.id}
+                    className="brand-row group"
+                    onClick={() => { navigate(`/brand/${brand.id}`); setIsPopoverOpen(false); }}
+                  >
+                    {/* Tên Brand */}
+                    <span>{brand.name}</span>
+                    <ChevronRight size={14} />
 
-                {/* PHẦN 1: GRID THƯƠNG HIỆU (Ngang 4 cái, tự xuống dòng) */}
-                <div className="grid grid-cols-4 gap-4">
-                  {brands.map((bra) => (
-                    <div
-                      key={bra.id}
-                      onMouseEnter={() => setActiveBrandId(bra.id)}
-                      className={`flex flex-col items-center justify-center p-3 rounded-2xl cursor-pointer transition-all duration-300 ${activeBrandId === bra.id
-                        ? "bg-primary/10 text-primary scale-110 shadow-lg"
-                        : "hover:bg-white/5 text-white/50"
-                        }`}
-                      onClick={() => navigate(bra.link)}
-                    >
-                      <RenderImage
-                        src={bra.image}
-                        alt={bra.name}
-                        className={`w-6 h-6 object-contain ${activeBrandId === bra.id ? "" : "dark:invert"}`}
-                      />
-                    </div>
-                  ))}
-                </div>
+                    {/* MENU CON */}
+                    <div className="sub-menu-glass">
+                      {/* Header nhỏ */}
+                      <div className="px-3 py-2 text-[9px] opacity-40 uppercase font-black tracking-widest text-[var(--text-main)] border-b border-[var(--text-main)]/10 mb-1">
+                        {brand.name}
+                      </div>
 
-                {/* PHẦN 2: MENU DỌC THỂ LOẠI (Giống nShop) */}
-                {activeBrandId && (
-                  <div className="flex flex-col animate-in fade-in slide-in-from-top-4 duration-500 pt-4 border-t border-white/5">
-                    <p className="px-4 pb-2 text-[10px] font-black uppercase text-white/20 italic">
-                      Thể loại {brands.find(b => b.id === activeBrandId)?.name}
-                    </p>
+                      {categories.filter(cat => cat.thuonghieu_id === brand.id).map((cat) => (
+                        <div
+                          key={cat.id}
+                          className="category-link"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/category/${cat.id}`);
+                            setIsPopoverOpen(false);
+                          }}
+                        >
+                          {cat.name}
+                        </div>
+                      ))}
 
-                    {/* Khung menu dọc trắng/mờ giống hình bạn gửi */}
-                    <div className="bg-white/5 rounded-2xl p-1.5 flex flex-col gap-0.5">
-                      {categories
-                        .filter(cat => cat.thuonghieu_id === activeBrandId)
-                        .map((subCat, index) => (
-                          <Button
-                            key={subCat.id}
-                            variant="light"
-                            // Mục đầu tiên màu đỏ (highlight) giống PS5 trong nShop
-                            className={`justify-start h-11 px-4 font-bold uppercase text-xs italic rounded-xl hover:bg-white/10 transition-all ${index === 0 ? "text-red-500" : "text-white/80"
-                              }`}
-                            onPress={() => {
-                              navigate(subCat.link);
-                              setIsPopoverOpen(false);
-                            }}
-                            startContent={<ChevronRight size={14} className="opacity-30" />}
-                          >
-                            {subCat.name}
-                          </Button>
-                        ))}
-
-                      {/* Fallback khi chưa có thể loại */}
-                      {categories.filter(cat => cat.thuonghieu_id === activeBrandId).length === 0 && (
-                        <div className="p-8 text-center text-[10px] font-black uppercase opacity-20 italic">
-                          Chưa có danh mục cụ thể
+                      {categories.filter(cat => cat.thuonghieu_id === brand.id).length === 0 && (
+                        <div className="px-3 py-2 text-[10px] italic opacity-40 text-[var(--text-main)]">
+                          Đang cập nhật...
                         </div>
                       )}
                     </div>
                   </div>
-                )}
+                ))}
               </div>
             </PopoverContent>
           </Popover>
         </NavbarItem>
 
-        {/* Các menu text khác nếu có */}
         <NavbarItem>
-          <Link href="/news" className="text-[var(--text-main)] font-bold text-sm uppercase tracking-wide opacity-80 hover:opacity-100">
-            Tin tức
-          </Link>
+          <Link href="/news" className="text-[var(--text-main)] font-bold text-sm uppercase tracking-wide opacity-70 hover:opacity-100">Tin tức</Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/contact" className="text-[var(--text-main)] font-bold text-sm uppercase tracking-wide opacity-70 hover:opacity-100">Liên hệ</Link>
         </NavbarItem>
       </NavbarContent>
 
-
-      {/* 3. TIỆN ÍCH (Search, Cart, User) - GIỮ NGUYÊN */}
-      <NavbarContent justify="end" className="gap-5">
+      {/* --- RIGHT ACTIONS --- */}
+      <NavbarContent justify="end" className="gap-4">
         <Input
           classNames={{
-            base: "hidden lg:block",
-            inputWrapper: "bg-[var(--text-main)]/5 border-none w-40 md:w-64",
-            input: "text-[var(--text-main)]"
+            base: "hidden lg:block max-w-[12rem]",
+            inputWrapper: "search-nav-wrapper", // Class từ CSS
+            input: "text-[var(--text-main)] placeholder:text-[var(--text-main)]/40 text-xs font-medium",
           }}
-          placeholder="Search..."
-          startContent={<Search size={16} className="opacity-30" />}
+          placeholder="Tìm kiếm..."
+          startContent={<Search size={16} className="text-[var(--text-main)] opacity-40" />}
         />
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-        </div>
+        <div className="hidden sm:flex"><ThemeToggle /></div>
 
         <Badge content="0" size="sm" color="danger" className="border-none text-white font-bold">
-          <Button isIconOnly variant="light" className="text-[var(--text-main)] opacity-80 hover:opacity-100">
+          <Button isIconOnly variant="light" className="text-[var(--text-main)] opacity-70 hover:opacity-100">
             <ShoppingCart size={22} />
           </Button>
         </Badge>
@@ -193,47 +165,41 @@ export default function AppNavbar() {
           {userData ? (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                <Button
-                  disableRipple
-                  className="bg-[var(--text-main)]/10 text-[var(--text-main)] font-bold px-4 h-11 rounded-2xl flex items-center gap-3 border border-white/10"
-                  variant="flat"
-                >
-                  <span className="text-sm tracking-tight hidden sm:block">
-                    {userData?.email?.split('@')[0]}
-                  </span>
-                  <div className="bg-[var(--text-main)]/20 p-1.5 rounded-full border border-white/20">
-                    <User size={16} fill="currentColor" />
+                {/* Gọi class user-btn từ CSS */}
+                <Button disableRipple className="user-btn">
+                  <div className="bg-[var(--text-main)] text-[var(--background)] p-1 rounded-full">
+                    <User size={14} strokeWidth={3} />
                   </div>
+                  <span className="text-xs uppercase tracking-wide hidden sm:block max-w-[80px] truncate">
+                    {userData.ten || "User"}
+                  </span>
+                  <ChevronDown size={12} className="opacity-50" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="User Actions"
                 variant="flat"
-                onAction={(key) => {
-                  if (key === "/logout") handleLogout();
-                  else navigate(key);
-                }}
+                onAction={(key) => key === "logout" ? handleLogout() : navigate(key)}
               >
-                <DropdownItem key="/profile" startContent={<User size={18} />}>Hồ sơ cá nhân</DropdownItem>
-                <DropdownItem key="/orders" startContent={<ClipboardList size={18} />}>Đơn hàng</DropdownItem>
-                <DropdownItem key="/settings" startContent={<Settings size={18} />}>Cài đặt</DropdownItem>
-                <DropdownItem key="/logout" color="danger" className="text-danger" startContent={<LogOut size={18} />}>
-                  Đăng xuất
-                </DropdownItem>
+                <DropdownItem key="/profile" startContent={<User size={16} />}>Hồ sơ</DropdownItem>
+                <DropdownItem key="/orders" startContent={<ClipboardList size={16} />}>Đơn hàng</DropdownItem>
+                <DropdownItem key="/settings" startContent={<Settings size={16} />}>Cài đặt</DropdownItem>
+                <DropdownItem key="logout" className="text-danger" color="danger" startContent={<LogOut size={16} />}>Đăng xuất</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Button
-              as={Link}
-              href="/login"
-              className="bg-[var(--text-main)] text-[var(--bg-main)] font-bold px-6 h-10 rounded-full shadow-lg hover:scale-105 transition-transform"
-              variant="flat"
-            >
-              Đăng nhập
+            <Button onPress={() => navigate('/login')} className="btn-tempest h-10 px-6 text-xs">
+              ĐĂNG NHẬP
             </Button>
           )}
         </NavbarItem>
       </NavbarContent>
-    </Navbar >
+
+      <NavbarContent className="sm:hidden" justify="end">
+        <Button isIconOnly variant="light" className="text-[var(--text-main)]">
+          <Menu size={24} />
+        </Button>
+      </NavbarContent>
+    </Navbar>
   );
 }

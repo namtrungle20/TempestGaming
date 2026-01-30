@@ -1,119 +1,95 @@
 import React, { useState } from 'react';
 import { Card, CardBody, Input, Button, Link } from "@heroui/react";
-import { Mail, Lock, EyeOff, Eye, UserPlus, User, Phone } from "lucide-react";
-import { useRegister } from '@/hook/useRegister'; // Đảm bảo bạn đã tạo hook này
+import { Mail, Lock, EyeOff, Eye, UserPlus, Phone } from "lucide-react";
+import { useRegister } from '@/hook/useRegister';
 
 export default function SignUpPage() {
   const { formData, loading, handleChange, handleSignUp } = useRegister();
-
   const [isVisible, setIsVisible] = useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
 
-  // Style dùng chung cho Input để code gọn hơn
-  const sharedInputClass = {
-    inputWrapper: [
-      "bg-[var(--text-main)]/[0.04]", // Nền input cực nhẹ theo theme
-      "border-[var(--border)]",
-      "hover:border-[var(--text-main)]",
-      "transition-colors",
-      "h-12",
-      "backdrop-blur-sm"
-    ],
-    label: "text-[var(--text-main)] font-bold italic uppercase text-[11px] tracking-widest",
-    input: "text-[var(--text-main)] placeholder:opacity-40"
+  const inputClasses = {
+    inputWrapper: "input-group-tempest",
+    label: "input-label-tempest",
+    input: "font-medium"
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-transparent">
-      {/* Card đồng bộ màu theo biến CSS var(--text-main) */}
-      <Card className="w-full max-w-[480px] bg-[var(--text-main)]/[0.02] backdrop-blur-2xl border-1 border-[var(--border)] shadow-2xl rounded-[2.5rem] p-4">
-        <CardBody className="flex flex-col gap-8">
-
-          {/* Header với Font đặc trưng của Tempest */}
-          <div className="flex flex-col gap-2 text-center mt-2">
-            <h1 className="text-4xl font-black italic text-[var(--text-main)] tracking-tighter uppercase leading-none">
-              JOIN THE SQUAD <br />
-              <span className="opacity-30 text-2xl">RIGHT NOW</span>
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+      <Card className="w-full max-w-[500px] card-glass p-8">
+        <CardBody className="flex flex-col gap-6">
+          
+          <div className="text-center">
+            <h1 className="text-4xl font-black italic tracking-tighter uppercase leading-none mb-2">
+              JOIN US
             </h1>
-            <p className="text-[var(--text-main)] opacity-50 font-medium text-sm tracking-tight">
-              Khởi tạo hành trình của bạn, chiến binh!
+            <p className="opacity-50 font-bold text-xs uppercase tracking-widest">
+              Gia nhập Tempest Gaming
             </p>
           </div>
 
           <form onSubmit={handleSignUp} className="flex flex-col gap-5">
-
-            {/* Hàng Email & SĐT */}
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex gap-4">
               <Input
                 name="email"
                 type="email"
                 label="Email"
-                placeholder="rimuru@tempest.com"
+                placeholder="abc@gmail.com"
                 labelPlacement="outside"
-                startContent={<Mail className="text-[var(--text-main)] opacity-60" size={18} />}
+                startContent={<Mail size={18} className="opacity-50"/>}
                 variant="bordered"
-                classNames={sharedInputClass}
+                classNames={inputClasses}
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
               <Input
                 name="sdt"
-                label="Số điện thoại"
-                placeholder="09xxx..."
+                label="SĐT"
+                placeholder="09..."
                 labelPlacement="outside"
-                startContent={<Phone className="text-[var(--text-main)] opacity-60" size={18} />}
+                startContent={<Phone size={18} className="opacity-50"/>}
                 variant="bordered"
-                classNames={sharedInputClass}
+                classNames={inputClasses}
                 value={formData.sdt}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            {/* Mật khẩu */}
             <Input
               name="password"
-              value={formData.password}
-              onChange={handleChange}
               type={isVisible ? "text" : "password"}
-              label="Mật khẩu bảo mật"
+              label="Mật khẩu"
               placeholder="••••••••"
               labelPlacement="outside"
-              startContent={<Lock className="text-[var(--text-main)] opacity-60" size={18} />}
+              startContent={<Lock size={18} className="opacity-50"/>}
               endContent={
-                <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                  {isVisible ?
-                    <Eye className="text-[var(--text-main)] opacity-40" size={18} /> :
-                    <EyeOff className="text-[var(--text-main)] opacity-40" size={18} />
-                  }
+                <button type="button" onClick={() => setIsVisible(!isVisible)} className="opacity-40 hover:opacity-100">
+                  {isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               }
               variant="bordered"
-              classNames={sharedInputClass}
+              classNames={inputClasses}
+              value={formData.password}
+              onChange={handleChange}
               required
             />
 
-            {/* Nút đăng ký đảo màu theo Theme */}
             <Button
               type="submit"
               isLoading={loading}
-              className="btn-tempest btn-tempest-lg"
-              radius="full"
-              endContent={!loading && <UserPlus size={20} strokeWidth={2.5} />}
+              className="btn-tempest h-12 w-full mt-4 text-sm"
+              endContent={!loading && <UserPlus size={20} />}
             >
-              TẠO TÀI KHOẢN
+              ĐĂNG KÝ
             </Button>
           </form>
 
-          {/* Footer Link */}
-          <p className="text-center text-[var(--text-main)] opacity-40 text-xs font-bold uppercase tracking-tighter mb-2">
-            Đã là thành viên?{" "}
-            <Link href="/login" className="font-black text-[var(--text-main)] underline opacity-100 hover:opacity-70 transition-opacity ml-1">
-              Đăng nhập ngay
-            </Link>
-          </p>
-
+          <div className="text-center mt-2">
+             <Link href="/login" className="text-[var(--text-main)] font-black underline hover:opacity-70 text-sm uppercase italic">
+              Đã có tài khoản?
+             </Link>
+          </div>
         </CardBody>
       </Card>
     </div>

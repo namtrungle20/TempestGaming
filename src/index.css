@@ -30,97 +30,168 @@
     --border: 217 19% 27%;
 
     /* Biến Gradient riêng cho Tempest Dark */
-    --gradient-background: linear-gradient(to top, #111827 0%, #030712 100%);
+    --gradient-background: linear-gradient(to top, #010205 0%, #0d0e0f 100%);
     --text-main: #f8fafc;
   }
 
   body {
-    @apply antialiased overflow-x-hidden transition-colors duration-500;
+    background: var(--gradient-background) fixed;
+    color: var(--text-main);
+    border-color: hsl(var(--border));
+    @apply antialiased min-h-screen transition-colors duration-500 ease-in-out;
   }
 }
 
 
-@layer components {
+@layer base {
+  body {
+    /* Tự động lấy gradient bạn thích làm nền */
+    background: var(--gradient-background) fixed;
 
-  /* --- LAYOUT SYSTEM --- */
-  .layout-tempest {
-    @apply min-h-screen transition-all duration-700;
-    background: var(--main-bg) fixed;
+    /* Tự động lấy màu chữ chính (đen/trắng) áp dụng toàn trang */
+    color: var(--text-main);
+
+    /* Tự động lấy màu viền (nếu dùng border) */
+    border-color: hsl(var(--border));
+
+    @apply antialiased min-h-screen transition-colors duration-500 ease-in-out;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  li,
+  a {
     color: var(--text-main);
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+
+  /* --- NAVBAR TRONG SUỐT HOÀN TOÀN --- */
   .nav-glass {
-    background-color: rgba(var(--nav-rgb), 0.6) !important;
-    @apply backdrop-blur-xl border-b border-[var(--border)] transition-all duration-500;
+    /* Viết CSS thuần thì dùng !important thoải mái */
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+    box-shadow: none !important;
+    @apply transition-colors duration-500;
   }
 
-  /* --- BUTTON SYSTEM (TEMPEST) --- */
+  /* --- CARD KÍNH MỜ --- */
+  .card-glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    /* Box shadow viết CSS thuần để tránh lỗi parser v4 */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+    @apply rounded-[2.5rem] transition-all duration-300;
+  }
+
+  .card-glass:hover {
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.2);
+  }
+
+  /* --- MENU COMPONENT --- */
+  .menu-dropdown {
+    @apply p-1.5 bg-[var(--background)]/90 backdrop-blur-3xl border border-[var(--text-main)]/10 rounded-2xl flex flex-col;
+    width: 220px !important;
+    overflow: visible !important;
+    /* BẮT BUỘC: Để menu con bay ra ngoài được */
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
+  }
+
+  /* 2. Dòng Brand (Cha) */
+  .brand-row {
+    @apply relative flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-colors duration-200;
+  }
+
+  .brand-row:hover {
+    @apply bg-[var(--text-main)]/5;
+    /* Hover nhẹ nhàng */
+  }
+
+  .brand-row span {
+    @apply text-[var(--text-main)] font-bold uppercase text-xs tracking-wide transition-colors;
+  }
+
+  .brand-row svg {
+    @apply text-[var(--text-main)] transition-colors opacity-50;
+  }
+
+  /* 3. Menu Con (Sub-menu) */
+  .sub-menu-glass {
+    @apply absolute top-0 left-[calc(100%+8px)] w-56 p-1.5 bg-[var(--background)]/95 backdrop-blur-3xl border border-[var(--text-main)]/10 rounded-2xl opacity-0 invisible translate-x-[-10px] shadow-xl z-50 transition-all duration-200 ease-out;
+  }
+
+  /* Logic hiện menu con khi hover cha */
+  .brand-row:hover .sub-menu-glass {
+    @apply opacity-100 visible translate-x-0;
+  }
+
+  /* Mũi tên chỉ sang phải khi hover */
+  .brand-row:hover svg {
+    @apply opacity-100 translate-x-1;
+  }
+
+  /* 4. Dòng Category (Item con) */
+  .category-link {
+    @apply block px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest text-[var(--text-main)] opacity-60 hover:opacity-100 hover:bg-[var(--text-main)]/5 transition-all;
+  }
+
+  .sub-menu-header {
+    @apply px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-main)] opacity-30 border-b border-[var(--text-main)]/5 mb-1;
+  }
+
+  .user-btn {
+    @apply bg-[var(--text-main)]/5 hover:bg-[var(--text-main)]/10 text-[var(--text-main)] font-bold pl-3 pr-4 h-10 rounded-full flex items-center gap-2 border border-[var(--text-main)]/10 transition-all;
+  }
+
+  /* Input & Button Styles */
   .btn-tempest {
-    /* Ép màu bằng CSS thuần - Tailwind v4 ưu tiên cực cao */
-    background-color: var(--text-main) !important;
-    color: hsl(var(--background)) !important;
-    border: none !important;
-
-    /* Cấu trúc cơ bản */
-    @apply flex items-center justify-center gap-3 px-10 h-14 rounded-full font-[1000] uppercase italic transition-all duration-300 ease-in-out relative overflow-hidden tracking-tighter cursor-pointer;
-
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+    background-color: var(--text-main);
+    color: hsl(var(--background));
+    @apply flex items-center justify-center gap-2 px-6 py-2 rounded-full font-bold uppercase shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer;
   }
 
-  /* Hiệu ứng tương tác */
-  .btn-tempest:hover {
-    @apply scale-105;
-    letter-spacing: 0.1em !important;
-    filter: brightness(1.2) !important;
-    box-shadow: 0 0 30px -5px var(--text-main) !important;
+  .input-tempest {
+    @apply bg-transparent border border-white/10 text-[var(--text-main)] rounded-xl;
   }
 
-  .btn-tempest:active {
-    @apply scale-95;
-    filter: brightness(0.9) !important;
+  .input-group-tempest {
+    /* Đã tách !important ra khỏi @apply */
+    @apply bg-white/5 border border-white/10 data-[hover=true]:border-white/30 data-[hover=true]:bg-white/10 transition-all h-14 rounded-xl px-4;
   }
 
-  /* Định nghĩa size riêng biệt - KHÔNG dùng @apply .btn-tempest ở đây */
-  .btn-tempest-sm {
-    @apply h-12 text-sm px-6;
+  /* Đã dùng dấu ! ở đầu thay vì !important ở cuối */
+  .input-label-tempest {
+    @apply !text-[var(--text-main)] font-black uppercase italic text-[11px] tracking-[0.2em] ml-1 mb-2 opacity-70;
   }
 
-  .btn-tempest-lg {
-    @apply h-16 text-lg px-12;
-  }
-
-  /* --- TYPOGRAPHY & ICONS --- */
-  .text-dynamic {
-    @apply bg-clip-text text-transparent bg-gradient-to-b;
-    background-image: linear-gradient(to bottom, var(--text-main) 60%, rgba(124, 58, 237, 0.5));
-  }
-
-  svg.lucide {
-    @apply transition-transform duration-300;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1));
-  }
-
-  /* --- UI ELEMENTS --- */
-  .theme-toggle-frame [data-heroui-switch-thumb] {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    @apply transition-all duration-500;
-  }
-
-  /* Sửa Switch Thumb theo màu text chính */
-  .group[data-selected=true] .bg-secondary {
-    background-color: var(--text-main) !important;
-  }
-
-  .shadow-tempest-dynamic {
-    /* Light Mode: Bóng đổ đen sâu, mịn */
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4),
-      0 18px 36px -18px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.5s ease;
-  }
-
-  .dark .shadow-tempest-dynamic {
-    /* Dark Mode: Bóng đổ màu trắng phát sáng (Glow) */
-    box-shadow: 0 0 50px -10px rgba(255, 255, 255, 0.15),
-      0 0 20px -5px rgba(255, 255, 255, 0.1);
+  .search-nav-wrapper {
+    @apply bg-[var(--text-main)]/5 border border-[var(--text-main)]/10 hover:bg-[var(--text-main)]/10 h-10 rounded-full transition-colors;
   }
 }
