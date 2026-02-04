@@ -17,11 +17,25 @@ export const authService = {
     },
 
     register: async (userData) => {
-        const response = await axiosInstance.post('/auth/dangky', userData);
-        return response.data;
+        try {
+            const response = await axiosInstance.post('/auth/dangky', userData);
+            // Backend trả về success: true
+            return {
+                success: true,
+                token: response.data.data.accessToken,
+                user: response.data.data.nguoidung
+            };
+        } catch (error) {
+            // Lấy message lỗi từ Backend trả về
+            const errorMessage = error.response?.data?.message || "Đăng ký thất bại";
+            return {
+                success: false,
+                message: errorMessage
+            };
+        }
     },
 
-    logout: async () => {
-        await axiosInstance.post('/auth/logout');
-    }
-};
+        logout: async () => {
+            await axiosInstance.post('/auth/logout');
+        }
+    };

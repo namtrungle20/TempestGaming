@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -19,34 +19,19 @@ import {
 import { Search, User, ShoppingCart, LogOut, Settings, ClipboardList, ChevronDown, LayoutGrid, ChevronRight, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hook/useAuth";
-import { ThemeToggle } from './ThemeToggle';
-import { useCategories } from "@/hook/useCategories";
-import { useBrands } from "@/hook/useBrand";
-import { RenderImage } from "@/components/RenderImage";
-
+import ThemeToggle from './ThemeToggle';
+// import { useCategories } from "@/hook/useCategories";
+// import { RenderImage } from "@/components/RenderImage";
+import { useAuthStore } from "@/store/useAuthStore";
 
 
 export default function AppNavbar() {
   const navigate = useNavigate();
   const { handleLogout } = useAuth();
-  const rawData = localStorage.getItem('nguoidung');
-  const userData = rawData && rawData !== "undefined" ? JSON.parse(rawData) : null;
-
-
-  // State lưu danh mục
-  const { categories } = useCategories();
-  const { brands } = useBrands();
-  const [activeBrandId, setActiveBrandId] = useState(null);
+  const { user } = useAuthStore();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  // Effect để chọn brand đầu tiên khi mở menu
-  useEffect(() => {
-    if (brands.length > 0 && !activeBrandId) {
-      setActiveBrandId(brands[0].id);
-    }
-  }, [isPopoverOpen, brands, activeBrandId]);
 
-  // Gọi API lấy danh mục ngay trong Navbar
 
 
   return (
@@ -86,50 +71,7 @@ export default function AppNavbar() {
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent>
-              {/* Class .menu-dropdown sẽ chịu trách nhiệm tạo khung kính */}
-              <div className="menu-dropdown">
-                {brands.map((brand) => (
-                  <div
-                    key={brand.id}
-                    className="brand-row group"
-                    onClick={() => { navigate(`/brand/${brand.id}`); setIsPopoverOpen(false); }}
-                  >
-                    {/* Tên Brand */}
-                    <span>{brand.name}</span>
-                    <ChevronRight size={14} />
 
-                    {/* MENU CON */}
-                    <div className="sub-menu-glass">
-                      {/* Header nhỏ */}
-                      <div className="px-3 py-2 text-[9px] opacity-40 uppercase font-black tracking-widest text-[var(--text-main)] border-b border-[var(--text-main)]/10 mb-1">
-                        {brand.name}
-                      </div>
-
-                      {categories.filter(cat => cat.thuonghieu_id === brand.id).map((cat) => (
-                        <div
-                          key={cat.id}
-                          className="category-link"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/category/${cat.id}`);
-                            setIsPopoverOpen(false);
-                          }}
-                        >
-                          {cat.name}
-                        </div>
-                      ))}
-
-                      {categories.filter(cat => cat.thuonghieu_id === brand.id).length === 0 && (
-                        <div className="px-3 py-2 text-[10px] italic opacity-40 text-[var(--text-main)]">
-                          Đang cập nhật...
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </PopoverContent>
           </Popover>
         </NavbarItem>
 
@@ -162,29 +104,47 @@ export default function AppNavbar() {
         </Badge>
 
         <NavbarItem>
-          {userData ? (
+          {user ? (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                {/* Gọi class user-btn từ CSS */}
-                <Button disableRipple className="user-btn">
-                  <div className="bg-[var(--text-main)] text-[var(--background)] p-1 rounded-full">
-                    <User size={14} strokeWidth={3} />
+                <Button disableRipple className="user-btn flex flex-col items-start gap-0 h-auto py-1 px-3">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-[var(--text-main)] text-[var(--background)] p-1 rounded-full">
+                      <User size={14} strokeWidth={3} />
+                    </div>
+                    {/* Hiển thị Tên */}
+                    <span className="text-xs font-bold uppercase tracking-wide truncate max-w-[120px]">
+                      {user.email.split('@')[0]} {/* Hoặc user.name nếu Model có */}
+                    </span>
+                    <ChevronDown size={12} className="opacity-50" />
                   </div>
-                  <span className="text-xs uppercase tracking-wide hidden sm:block max-w-[80px] truncate">
-                    {userData.ten || "User"}
-                  </span>
-                  <ChevronDown size={12} className="opacity-50" />
                 </Button>
               </DropdownTrigger>
+
               <DropdownMenu
                 aria-label="User Actions"
                 variant="flat"
                 onAction={(key) => key === "logout" ? handleLogout() : navigate(key)}
               >
+                {/* DropdownItem tiêu đề hiển thị email để xác nhận người dùng */}
+                <DropdownItem key="profile_info" className="h-14 gap-2 opacity-100 cursor-default" textValue="user info">
+                  <p className="font-semibold text-xs">Đăng nhập bởi</p>
+                  <p className="font-bold text-primary text-xs">{user.email}</p>
+                </DropdownItem>
+
                 <DropdownItem key="/profile" startContent={<User size={16} />}>Hồ sơ</DropdownItem>
                 <DropdownItem key="/orders" startContent={<ClipboardList size={16} />}>Đơn hàng</DropdownItem>
-                <DropdownItem key="/settings" startContent={<Settings size={16} />}>Cài đặt</DropdownItem>
-                <DropdownItem key="logout" className="text-danger" color="danger" startContent={<LogOut size={16} />}>Đăng xuất</DropdownItem>
+
+                {/* Hiện menu Admin nếu là quản trị viên */}
+                {user.isAdmin && (
+                  <DropdownItem key="/admin" className="text-primary" startContent={<Settings size={16} />}>
+                    Quản trị hệ thống
+                  </DropdownItem>
+                )}
+
+                <DropdownItem key="logout" className="text-danger" color="danger" startContent={<LogOut size={16} />}>
+                  Đăng xuất
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           ) : (

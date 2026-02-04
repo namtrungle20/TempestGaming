@@ -11,6 +11,7 @@ import { PrivateRoute } from "././components/auth/PrivateRoute.jsx"
 import { PublicRoute } from "./components/auth/PublicRoute.jsx";
 import AppNavbar from "./components/layout/NavbarHeader.jsx";
 import UserLayout from "./components/layout/UserLayout.jsx";
+import AdminLayout from "./components/layout/admin/AdminLayout.jsx";
 
 const queryClient = new QueryClient();
 
@@ -33,7 +34,7 @@ function App() {
             </Route>
 
             <Route element={<PrivateRoute allowAdminOnly={true} />}>
-              {/* Bất cứ gì nằm trong này đều bị chặn nếu role !== admin */}
+              {/* path="/admin/*" cho phép React Router xử lý các route con bên trong AdminPage */}
               <Route path="/admin/*" element={<AdminPage />} />
             </Route>
 

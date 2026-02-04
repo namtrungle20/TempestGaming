@@ -2,7 +2,7 @@ import { Switch } from "@heroui/react";
 import { Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export const ThemeToggle = () => {
+const ThemeToggle = () => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -57,3 +57,4 @@ export const ThemeToggle = () => {
     </div >
   );
 };
+export default ThemeToggle;
