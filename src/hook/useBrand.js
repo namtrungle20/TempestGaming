@@ -3,18 +3,20 @@ import { brandService } from "../services/brandService";
 
 export const useBrands = () => {
     const [brands, setBrands] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const fetchBrands = async () => {
+    const loadBrands = async () => {
         setLoading(true);
-        const data = await brandService.getAll();
-        setBrands(data);
-        setLoading(false);
+        try {
+            const res = await brandService.getAll();
+            setBrands(res.data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
+    useEffect(() => { loadBrands(); }, []);
 
-    useEffect(() => {
-        fetchBrands();
-    }, []); // Chạy 1 lần duy nhất khi load trang
-
-    return { brands, loading, refresh: fetchBrands };
+    return { brands, loading, refresh: loadBrands, deleteBrand: brandService.delete };
 };

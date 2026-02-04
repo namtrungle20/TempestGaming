@@ -8,7 +8,10 @@ export default class Category {
     }
 
     // Helper: Tạo link chuẩn cho từng danh mục
-    get link() {
-        return `/loaisanpham/${this.id}`;
+    static toApi(data) {
+        return {
+            ten_loai: data.name, // Map lại tên trường theo Backend
+            hinh_anh: typeof data.image === 'string' ? data.image : (data.image?.title || ""),
+        };
     }
 }

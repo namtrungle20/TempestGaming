@@ -1,5 +1,5 @@
 
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 export default class Product {
     constructor(data = {}) {
         // Chuẩn hóa ID: React-admin cần 'id', Backend trả về 'sanpham_id'

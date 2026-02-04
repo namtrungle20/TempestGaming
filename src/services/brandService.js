@@ -1,34 +1,25 @@
 import axiosInstance from "../libs/axiosInstance";
-import Brand from "../models/Brand";
+import { resourceMap } from '@/admin/configs/resourceConfig';
+
+const config = resourceMap.brands;
 
 export const brandService = {
     // Lấy toàn bộ danh sách thương hiệu
-    getAll: async (signal) => {
-        try {
-            const response = await axiosInstance.get("/thuonghieu", { signal });
-            const rawList = response.data?.data || (Array.isArray(response.data) ? response.data : []);
+    getAll: () => axiosInstance.get(`/api/${config.endpoint}`),
 
-            if (Array.isArray(rawList)) {
-                return rawList.map(item => new Brand(item));
-            }
-
-            return [];
-        } catch (error) {
-            if (axiosInstance.isCancel(error)) return [];
-
-            console.error("❌ Brand Service Error:", error);
-            return [];
+    create: async (name, file) => {
+        let fileName = '';
+        if (file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            const uploadRes = await axiosInstance.post('/api/images/upload', formData);
+            fileName = uploadRes.data.file[0].filename;
         }
+        return axiosInstance.post(`/api/${config.endpoint}`, {
+            ten_thuong_hieu: name,
+            hinh_anh: fileName
+        });
     },
 
-    // Lấy chi tiết một thương hiệu theo ID
-    getById: async (id) => {
-        try {
-            const response = await axiosInstance.get(`/thuonghieu/${id}`);
-            return new Brand(response.data);
-        } catch (error) {
-            console.error(`Lỗi lấy thương hiệu ${id}:`, error);
-            return null;
-        }
-    }
+    delete: (id) => axiosInstance.delete(`/api/${config.endpoint}/${id}`),
 };

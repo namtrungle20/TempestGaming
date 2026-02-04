@@ -17,12 +17,20 @@ export default class User {
         return this.vaitro === '1';
     }
     static toApi(data) {
-        return {
-            ...data,
-            nguoidung_id: data.id, // Map lại ID
-            is_lock: data.is_lock ? 1 : 0, // Convert true -> 1
-            vaitro: Number(data.vaitro)
+        const apiPayload = {
+            // QUAN TRỌNG: Backend cần tên này, giá trị lấy từ data.id (là nguoidung_id cũ)
+            id: data.id,
+            email: data.email,
+            sdt: data.sdt,
+            diachi: data.diachi,
+            vaitro: Number(data.vaitro),
+            is_lock: data.is_lock ? 1 : 0
         };
+
+        // Log ra để ông tự kiểm tra ở Console trước khi gửi
+        console.log("Dữ liệu sau khi qua toApi:", apiPayload);
+
+        return apiPayload;
     }
 
 }
