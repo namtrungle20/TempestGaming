@@ -1,47 +1,45 @@
 import React from 'react';
-import {
-    Edit,
-    SimpleForm,
-    TextInput,
-    NumberInput,
-    ImageInput,
-    ImageField,
-    Labeled
+import { 
+    Edit, SimpleForm, TextInput, NumberInput, ImageInput, ImageField, 
+    ReferenceInput, SelectInput, FormDataConsumer, required 
 } from 'react-admin';
 
 const ProductEdit = (props) => (
-    <Edit {...props} title="Chỉnh sửa sản phẩm">
+    <Edit {...props} title="Cập nhật Sản phẩm">
         <SimpleForm>
-            {/* ID để chế độ disabled */}
-            <TextInput source="id" label="Mã sản phẩm" disabled />
-
-            <TextInput source="name" label="Tên sản phẩm" fullWidth />
-            <TextInput source="description" label="Mô tả" multiline fullWidth />
-
-            <div style={{ display: 'flex', gap: '20px' }}>
-                <NumberInput source="price" label="Giá bán (VND)" />
-                <NumberInput source="stock" label="Số lượng kho" />
+            <TextInput source="id" disabled />
+            <TextInput source="ten_sp" label="Tên sản phẩm" fullWidth validate={required()} />
+            
+            <div className="flex gap-4 w-full">
+                <NumberInput source="gia" label="Giá bán" validate={required()} />
+                <NumberInput source="so_luong" label="Tồn kho" validate={required()} />
             </div>
 
-            {/* Hiển thị ảnh hiện tại một cách rõ ràng */}
-            <Labeled label="Ảnh hiện tại">
-                <ImageField source="image" sx={{ '& img': { maxWidth: 200, maxHeight: 200, objectFit: 'contain', mt: 1 } }} />
-            </Labeled>
+            {/* Logic lọc tương tự Create */}
+            <ReferenceInput source="thuonghieu_id" reference="brands">
+                <SelectInput label="Thương hiệu" fullWidth validate={required()} />
+            </ReferenceInput>
 
-            {/* Input chọn ảnh mới */}
-            <ImageInput
-                source="image" // Vẫn dùng chung source để dataProvider dễ xử lý
-                label="Cập nhật ảnh mới (Cloudinary)"
-                accept={{ 'image/*': ['.jpeg', '.jpg', '.png'] }}
-                // QUAN TRỌNG: Format để tránh lỗi "Skipped 0"
-                // Nếu giá trị là string (URL từ cloud), ta trả về null để Input không bị loạn
-                // Nếu là Object (file mới chọn), giữ nguyên để hiển thị preview
-                format={value => (typeof value === 'string' ? null : value)}
-            >
+            <FormDataConsumer>
+                {({ formData, ...rest }) => (
+                    <ReferenceInput 
+                        source="loai_id" 
+                        reference="categories" 
+                        // Nếu có thuonghieu_id thì lọc, ko thì hiện tất cả hoặc rỗng tùy logic backend
+                        filter={formData.thuonghieu_id ? { thuonghieu_id: formData.thuonghieu_id } : {}} 
+                        {...rest}
+                    >
+                        <SelectInput label="Loại sản phẩm" optionText="name" fullWidth validate={required()} />
+                    </ReferenceInput>
+                )}
+            </FormDataConsumer>
+
+            <ImageInput source="hinh_anh" label="Hình ảnh (Cập nhật ảnh mới)" accept="image/*">
                 <ImageField source="src" title="title" />
             </ImageInput>
+            
+            <TextInput source="mo_ta" label="Mô tả" multiline fullWidth />
         </SimpleForm>
     </Edit>
 );
-
 export default ProductEdit;

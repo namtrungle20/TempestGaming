@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/store/useAuthStore.jsx';
+import User from '@/models/User';
 
 export const authProvider = {
     // 1. Khi nhấn nút Login (Nếu bạn dùng form login của React-admin)
@@ -8,13 +9,16 @@ export const authProvider = {
             const result = await signIn(username, password);
 
             if (result.success) {
-                return Promise.resolve();
+                const currentUser = new User(result.data);
+                if (currentUser.isAdmin) {
+                    return Promise.resolve();
+                } else {
+                    return Promise.reject(new Error('Tài khoản không có quyền Admin'));
+                }
             } else {
-                // Hiển thị thông báo "Tài khoản của bạn đã bị khóa..." từ Backend trả về
                 return Promise.reject(new Error(result.message || 'Sai tài khoản hoặc mật khẩu'));
             }
         } catch (error) {
-            // Nếu server trả về lỗi 403, axios thường quăng vào catch
             const errorMsg = error.response?.data?.message || 'Lỗi đăng nhập';
             return Promise.reject(new Error(errorMsg));
         }
@@ -24,18 +28,31 @@ export const authProvider = {
     checkAuth: () => {
         const { user, accessToken } = useAuthStore.getState();
         // Nếu có token VÀ là admin thì cho qua
-        if (accessToken && user?.isAdmin()) {
+        if (!accessToken) {
+            return Promise.reject({ redirectTo: '/login' });
+        }
+        let currentUserData = user;
+
+        if (!currentUserData) {
+            try {
+                const storage = JSON.parse(localStorage.getItem('auth-storage') || '{}');
+                currentUserData = storage.state?.user;
+            } catch (e) {
+                const errorMsg = e.response?.data?.message || 'Lỗi đăng nhập';
+                return Promise.reject(new Error(errorMsg));
+            }
+        }
+
+        if (!currentUserData) {
+            return Promise.reject({ redirectTo: '/login' });
+        }
+        const currentUser = new User(currentUserData);
+
+        if (currentUser.isAdmin) {
             return Promise.resolve();
         }
 
-        const storageToken = localStorage.getItem('accessToken');
-        const storageRole = localStorage.getItem('vaitro');
-
-        if (storageToken && (storageRole === '1')) {
-            return Promise.resolve();
-        }
-        // Nếu không, đá ra trang login ngoài
-        return Promise.reject({ redirectTo: '/login' });
+        return Promise.reject({ redirectTo: '/login', message: 'Không đủ quyền truy cập' });
     },
 
     // 3. Kiểm tra lỗi trả về từ API (Ví dụ: token hết hạn 401)

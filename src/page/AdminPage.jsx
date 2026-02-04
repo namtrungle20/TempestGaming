@@ -17,7 +17,7 @@ const AdminPage = () => (
                 create={resource.create}
                 edit={resource.edit}
                 icon={resource.icon}
-                options={{ label: resource.name === 'nguoidung' ? 'Thành viên' : 'Sản phẩm' }}
+                options={resource.options}
             />
         ))}
     </Admin>

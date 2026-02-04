@@ -5,7 +5,7 @@ export default class Brand {
         this.image = data.image || "";
     }
 
-    getImageUrl() {
+    get imageUrl() {
         if (!this.rawImage) return "https://via.placeholder.com/50";
 
         // Nếu ảnh là link tuyệt đối (http...) thì trả về luôn

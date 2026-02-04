@@ -23,24 +23,21 @@ export const useAuth = () => {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
-
         if (loading) return;
 
         const result = await signIn(formData.loginKey, formData.password);
 
         if (result.success) {
             toast.success("Đăng nhập thành công!");
-
-            // Map lại User Model để check quyền
             const currentUser = new User(result.data);
 
-            if (currentUser.isAdmin()) {
+            if (currentUser.isAdmin) {
                 navigate('/admin', { replace: true });
             } else {
+                // Logic quay lại trang cũ hoặc về Home
                 navigate('/', { replace: true });
             }
         } else {
-            // Hiển thị lỗi từ backend (vd: Tài khoản bị khóa)
             toast.error(result.message);
         }
     };

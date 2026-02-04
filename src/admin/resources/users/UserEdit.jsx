@@ -1,25 +1,25 @@
-import { Edit, SimpleForm, TextInput, SelectInput, BooleanInput } from 'react-admin';
+import { Edit, SimpleForm, TextInput, SelectInput, BooleanInput, required } from 'react-admin';
 
 export default function UserEdit(props) {
     return (
-        <Edit {...props} title="Chỉnh sửa & Khóa tài khoản">
+        <Edit {...props} title="Chỉnh sửa Tài khoản">
             <SimpleForm>
                 <TextInput source="id" disabled label="Mã người dùng" />
-                <TextInput source="email" fullWidth />
+                
+                {/* Đã xóa nhập Tên, đưa Email lên đầu */}
+                <TextInput source="email" fullWidth validate={required()} type="email" />
+                
                 <TextInput source="sdt" label="Số điện thoại" />
                 <TextInput source="diachi" label="Địa chỉ" fullWidth />
 
-                {/* Chọn vai trò */}
-                <SelectInput source="vaitro" id="vai_tro" label="Quyền hạn" choices={[
+                <SelectInput source="vaitro" label="Quyền hạn" choices={[
                     { id: 1, name: 'Admin' },
                     { id: 2, name: 'Khách hàng' },
                 ]} />
 
-                {/* TÍNH NĂNG KHÓA (LOCK) */}
                 <BooleanInput
                     source="is_lock"
-                    id="is_lock"
-                    label="Khóa tài khoản này (Người dùng sẽ không thể đăng nhập)"
+                    label="Khóa tài khoản (Cấm đăng nhập)"
                 />
             </SimpleForm>
         </Edit>

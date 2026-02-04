@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -26,11 +26,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // CHỈ xóa token, KHÔNG redirect thủ công bằng window.location
-    if (error.response && error.response.status === 401) {
+    const status = error.response ? error.response.status : null;
+    if (status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('nguoidung');
-      // Hãy để authProvider của React-Admin lo việc redirect
+      localStorage.removeItem('auth-storage');
     }
     return Promise.reject(error);
   }

@@ -1,33 +1,32 @@
 import axiosInstance from "@/libs/axiosInstance";
 
 export const fileProvider = {
-    uploadImage: async (file) => {
-        // 1. Nếu là URL cũ (string), trả về luôn
-        if (!file || typeof file === 'string') return file;
-
-        // 2. Lấy file vật lý. React-admin bọc file trong file.rawFile
-        // Nếu file là Object {path: ...}, ta phải tìm file.rawFile
-        const fileToUpload = file.rawFile;
-
-        if (!fileToUpload) {
-            console.error("Lỗi: Object nhận được không chứa rawFile vật lý!", file);
-            return typeof file === 'object' && file.src ? file.src : "";
+    uploadImage: async (fileData) => {
+        // Nếu không có file hoặc file không phải object (đã là link string), trả về luôn
+        if (!fileData || typeof fileData === 'string' || !fileData.rawFile) {
+            return fileData;
         }
 
         const formData = new FormData();
-        // Key 'image' phải trùng với upload.single('image') ở Backend
-        formData.append('image', fileToUpload);
+        // Backend thường yêu cầu field name là 'image' hoặc 'file'
+        // Bạn check lại controller backend xem đang req.file là gì nhé. 
+        // Mình để mặc định là 'image' theo thói quen.
+        formData.append("image", fileData.rawFile);
 
         try {
-            const response = await axiosInstance.post('/images/cloudinary/upload', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            // Gọi route upload cloudinary bạn đã cung cấp
+            const response = await axiosInstance.post("/images/cloudinary/upload", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
-            // Trả về chuỗi URL từ Cloudinary
-            return response.data.file;
+            // Giả sử Backend trả về: { status: 200, data: "https://res.cloudinary..." }
+            // Hoặc: { url: "..." } -> Bạn cần log response ra xem cấu trúc
+            return response.data.data || response.data.url || response.data;
         } catch (error) {
-            console.error("Lỗi upload:", error.response?.data || error.message);
-            return "";
+            console.error("Lỗi upload ảnh:", error);
+            throw new Error("Không thể upload hình ảnh");
         }
     }
 };

@@ -1,16 +1,10 @@
 export default class Category {
     constructor(data = {}) {
         // 1. Map ID: Lấy loai_id từ API gán vào this.id
-        this.id = data.loai_id || data.id || Date.now(); 
-
-        // 2. Map Tên
+        this.id = data.loai_id || data.id;
         this.name = data.name || "Danh mục chưa đặt tên";
-
-        // 3. Map Ảnh
-        this.image = data.image || "https://via.placeholder.com/50";
-
-        // Các trường phụ (nếu cần sau này)
-        this.createdAt = data.createdAt;
+        this.image = data.image || "";
+        this.brandId = data.thuonghieu_id || data.brand_id;
     }
 
     // Helper: Tạo link chuẩn cho từng danh mục

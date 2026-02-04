@@ -1,11 +1,26 @@
 export const adminConfig = {
-    nguoidung: {
-        list: '/nguoidung/danh-sach',
-        detail: '/nguoidung/chi-tiet',
-        update: '/nguoidung/update',
-        delete: '/nguoidung/delete' // Ví dụ nếu có API xóa riêng
+    users: {
+        list: {
+            url: '/nguoidung/danh-sach',
+            method: 'post'
+        },
+        // Lấy chi tiết để Edit (Backend dùng POST - Quan trọng để fix 404 Edit)
+        detail: {
+            url: '/nguoidung/chi-tiet',
+            method: 'post'
+        },
+        // Cập nhật (Backend dùng PUT)
+        update: {
+            url: '/nguoidung/update',
+            method: 'put'
+        },
+        // Xóa (Backend dùng DELETE)
+        delete: {
+            url: '/nguoidung/delete',
+            method: 'delete'
+        }
     },
-    sanpham: {
+    products: {
         root: '/sanpham'
     }
 };
