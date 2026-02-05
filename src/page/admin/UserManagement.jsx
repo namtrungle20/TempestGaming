@@ -18,16 +18,17 @@ const UserManagement = () => {
                             <TableHead>Email</TableHead>
                             <TableHead>Vai trò</TableHead>
                             <TableHead>Trạng thái</TableHead>
-                            <TableHead className="text-right">Thao tác</TableHead>
+                            <TableHead>Thao tác</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users?.map(u => (
                             <TableRow key={u.id}>
                                 <TableCell className="font-medium">{u.email}</TableCell>
+                                <TableCell className="font-medium">{u.sdt}</TableCell>
                                 <TableCell>{u.isAdmin ? "Quản trị" : "Khách hàng"}</TableCell>
                                 <TableCell>
-                                    <span className={u.is_lock ? "text-destructive" : "text-green-500"}>
+                                    <span className= {u.is_lock ? "text-destructive" : "text-green-500"}>
                                         {u.is_lock ? "Bị khóa" : "Hoạt động"}
                                     </span>
                                 </TableCell>

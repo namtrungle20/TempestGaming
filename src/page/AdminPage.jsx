@@ -1,8 +1,10 @@
 import AdminLayout from "@/components/layout/admin/AdminLayout";
 import { Routes, Route } from "react-router-dom";
 import UserManagement from "./admin/UserManagement";
+import BrandManagement from "./admin/BrandManagement";
 
 // import UserManagement from "./admin/UserManagement"; // Sẽ tạo ở bước 4
+import CategoryManagement from './admin/CategoryManagement';
 
 const AdminPage = () => {
   return (
@@ -18,10 +20,11 @@ const AdminPage = () => {
 
         {/* Trang quản lý người dùng */}
         <Route path="users" element={<UserManagement />} />
-        
+
         {/* Các trang khác ông có thể thêm sau */}
-        <Route path="brands" element={<div>Đang phát triển trang Thương hiệu...</div>} />
+        <Route path="brands" element={<BrandManagement />} />
         <Route path="products" element={<div>Đang phát triển trang Sản phẩm...</div>} />
+        <Route path="categories" element={<CategoryManagement />} />
       </Route>
     </Routes>
   );

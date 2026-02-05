@@ -7,9 +7,13 @@ export const API_ENDPOINTS = {
         DELETE: "/nguoidung/delete",
     },
     BRAND: {
-        LIST: "/thuonghieu",
-        CREATE: "/thuonghieu",
-        UPDATE: "/thuonghieu", // Thường là /id nhưng tùy backend của ông
-        DELETE: "/thuonghieu",
+        BASE: "/thuonghieu",
+    },
+    CATEGORY: {
+        BASE: "/loaisanpham",
+    },
+    IMAGE: {
+        UPLOAD_LOCAL: "/images/upload",
+        UPLOAD_CLOUD: "/images/cloudinary/upload"
     }
 };

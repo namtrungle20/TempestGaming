@@ -1,31 +1,27 @@
-// src/services/categoryService.js
 import axiosInstance from "@/libs/axiosInstance";
-// import { requestWithCache } from "@/libs/requestUtils";
-import Category from "@/models/Category";
-import axios from "axios";
+import { API_ENDPOINTS } from "@/constants/apiEndpoints";
 
+const { CATEGORY } = API_ENDPOINTS;
 
 export const categoryService = {
-    getPublicCategories: async (signal) => {
-        try {
-            const response = await axiosInstance.get('/loaisanpham', { signal });
-            console.log("🔥 API Response:", response.data);
-            const rawList = response.data?.data || [];
+    // Nhận params để truyền timestamp chống cache 304
+    getAll: async (params) => {
+        return axiosInstance.get(CATEGORY.BASE, { params });
+    },
 
-            if (Array.isArray(rawList)) {
-                return rawList.map(item => new Category(item));
-            }
+    create: async (formData) => {
+        return axiosInstance.post(CATEGORY.BASE, formData, {
+            headers: { "Content-Type": undefined }
+        });
+    },
 
-            return [];
-        } catch (error) {
-            if (axios.isCancel(error)) {
-                // console.log("Request bị hủy (Clean up)"); // Mở dòng này nếu muốn xem log xanh
-                return [];
-            }
+    update: async (id, formData) => {
+        return axiosInstance.put(`${CATEGORY.BASE}/${id}`, formData, {
+            headers: { "Content-Type": undefined }
+        });
+    },
 
-            // Các lỗi khác (404, 500...) thì vẫn log bình thường để debug
-            console.error("❌ Service Error:", error);
-            return [];
-        }
+    delete: async (id) => {
+        return axiosInstance.delete(`${CATEGORY.BASE}/${id}`);
     }
 };

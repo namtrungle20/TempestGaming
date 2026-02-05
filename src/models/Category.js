@@ -1,17 +1,24 @@
 export default class Category {
     constructor(data = {}) {
-        // 1. Map ID: Lấy loai_id từ API gán vào this.id
-        this.id = data.loai_id || data.id;
-        this.name = data.name || "Danh mục chưa đặt tên";
+        // Map đúng loai_id từ SQL query của ông
+        this.id = data.loai_id || data.id || "";
+        this.name = data.name || "Chưa có tên loại";
         this.image = data.image || "";
-        this.brandId = data.thuonghieu_id || data.brand_id;
     }
 
-    // Helper: Tạo link chuẩn cho từng danh mục
-    static toApi(data) {
-        return {
-            ten_loai: data.name, // Map lại tên trường theo Backend
-            hinh_anh: typeof data.image === 'string' ? data.image : (data.image?.title || ""),
-        };
+    get imageUrl() {
+        if (!this.image) return "https://placehold.co/100?text=No+Image";
+        if (this.image.startsWith('http')) return this.image;
+        const baseUrl = import.meta.env.VITE_BACKEND_URL; 
+        return `${baseUrl}/images/${encodeURIComponent(this.image)}`;
+    }
+
+    static toFormData(data) {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        if (data.image instanceof File) {
+            formData.append("image", data.image);
+        }
+        return formData;
     }
 }

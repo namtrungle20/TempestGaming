@@ -1,44 +1,63 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryService } from "@/services/categoryService";
+import { toast } from "sonner";
+import Category from "@/models/Category"; // Import model để chuẩn hóa dữ liệu
 
 export const useCategories = () => {
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+    const queryKey = ["admin-categories"];
 
-    useEffect(() => {
-        // 1. Tạo AbortController để hủy request nếu user chuyển trang nhanh
-        const controller = new AbortController();
+    // 1. Lấy danh sách
+    const { data: categories, isLoading } = useQuery({
+        queryKey: queryKey,
+        queryFn: async () => {
+            // SỬA Ở ĐÂY: Gọi categoryService chứ không phải categories
+            const res = await categoryService.getAll({ _t: Date.now() });
 
-        const fetchCategories = async () => {
-            try {
-                setLoading(true);
+            // Kiểm tra cấu trúc data từ Backend (Log này rất quan trọng để debug)
+            console.log("Dữ liệu Category trả về:", res.data);
 
-                // Gọi Service (đã bỏ cache ở bước 1)
-                const data = await categoryService.getPublicCategories(controller.signal);
+            const rawData = res.data?.data || [];
+            return rawData.map((item) => new Category(item));
+        },
+        staleTime: 0,
+    });
 
-                if (!controller.signal.aborted) {
-                    console.log("🟢 Hook: Đã set state categories:", data); // Log kiểm tra Data
-                    setCategories(data);
-                }
+    // 2. Thêm mới
+    const createCategory = useMutation({
+        mutationFn: (formData) => categoryService.create(formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey });
+            toast.success("Thêm loại sản phẩm thành công");
+        },
+        onError: (err) => toast.error(err.response?.data?.message || "Lỗi thêm mới")
+    });
 
-            } catch (error) {
-                // Bỏ qua lỗi do hủy request
-                if (error.name !== 'CanceledError' && !axios.isCancel(error)) {
-                    console.error("❌ Lỗi lấy danh mục:", error);
-                }
-            } finally {
-                if (!controller.signal.aborted) {
-                    setLoading(false);
-                }
-            }
-        };
+    // 3. Cập nhật
+    const updateCategory = useMutation({
+        mutationFn: ({ id, formData }) => categoryService.update(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey });
+            toast.success("Cập nhật thành công");
+        },
+        onError: (err) => toast.error(err.response?.data?.message || "Lỗi cập nhật")
+    });
 
-        fetchCategories();
+    // 4. Xóa
+    const deleteCategory = useMutation({
+        mutationFn: (id) => categoryService.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey });
+            toast.success("Đã xóa loại sản phẩm");
+        },
+        onError: (err) => toast.error(err.response?.data?.message || "Không thể xóa")
+    });
 
-        // Cleanup function
-        return () => controller.abort();
-    }, []); // Dependency rỗng -> Chỉ chạy 1 lần khi mount
-
-    return { categories, loading };
+    return {
+        categories,
+        isLoading,
+        onCreate: createCategory.mutate,
+        onUpdate: updateCategory.mutate,
+        onDelete: deleteCategory.mutate
+    };
 };
