@@ -5,6 +5,7 @@ import BrandManagement from "./admin/BrandManagement";
 
 // import UserManagement from "./admin/UserManagement"; // Sẽ tạo ở bước 4
 import CategoryManagement from './admin/CategoryManagement';
+import ProductManagement from "./admin/ProductManagement";
 
 const AdminPage = () => {
   return (
@@ -23,7 +24,7 @@ const AdminPage = () => {
 
         {/* Các trang khác ông có thể thêm sau */}
         <Route path="brands" element={<BrandManagement />} />
-        <Route path="products" element={<div>Đang phát triển trang Sản phẩm...</div>} />
+        <Route path="products" element={<ProductManagement />} />
         <Route path="categories" element={<CategoryManagement />} />
       </Route>
     </Routes>

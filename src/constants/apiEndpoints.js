@@ -12,6 +12,9 @@ export const API_ENDPOINTS = {
     CATEGORY: {
         BASE: "/loaisanpham",
     },
+    PRODUCT:{
+        BASE: "/sanpham"
+    },
     IMAGE: {
         UPLOAD_LOCAL: "/images/upload",
         UPLOAD_CLOUD: "/images/cloudinary/upload"
